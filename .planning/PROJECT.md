@@ -12,11 +12,9 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Project foundation: FastAPI app, SQLAlchemy models, Docker Compose stack boots on RPi — Validated in Phase 1: Foundation
 
 ### Active
-
-- [ ] Project foundation: FastAPI app, SQLAlchemy models, Docker Compose stack boots on RPi
 - [ ] Auth: JWT-based login/logout with role-based access (admin, teacher, student)
 - [ ] Admin interface: device management, user management, schedule management
 - [ ] Teacher interface: attendance dashboard, attendance list per lesson, CSV export
