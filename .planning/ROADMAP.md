@@ -12,7 +12,7 @@ SmartAttend is built in 7 phases that deliver the full NFC attendance flow. Phas
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Project scaffold, all models, Docker Compose stack boots on RPi
+- [x] **Phase 1: Foundation** - Project scaffold, all models, Docker Compose stack boots on RPi (completed 2026-03-27)
 - [ ] **Phase 2: Authentication** - JWT login/logout with role-based access and HTTP-only cookies
 - [ ] **Phase 3: Admin Interface** - Device management, user management, schedule management
 - [ ] **Phase 4: Teacher Interface** - Attendance dashboard, lesson attendance list, CSV export
@@ -117,7 +117,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 2/3 | Complete    | 2026-03-27 |
 | 2. Authentication | 0/? | Not started | - |
 | 3. Admin Interface | 0/? | Not started | - |
 | 4. Teacher Interface | 0/? | Not started | - |
