@@ -1,5 +1,7 @@
 import os
 import pytest
+import app.database as _app_database
+import app.main as _app_main
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
@@ -27,20 +29,23 @@ def override_settings(monkeypatch):
 
 
 @pytest.fixture
-def db_session(override_settings):
+def db_session(override_settings, monkeypatch):
     """In-memory SQLite session with all tables created. Depends on override_settings."""
-    engine = create_engine(
+    test_engine = create_engine(
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
     )
-    Base.metadata.create_all(bind=engine)
-    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    # Patch the module-level engine so the lifespan create_all uses in-memory DB
+    monkeypatch.setattr(_app_database, "engine", test_engine)
+    monkeypatch.setattr(_app_main, "engine", test_engine)
+    Base.metadata.create_all(bind=test_engine)
+    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
     db = TestingSessionLocal()
     try:
         yield db
     finally:
         db.close()
-        Base.metadata.drop_all(bind=engine)
+        Base.metadata.drop_all(bind=test_engine)
 
 
 @pytest.fixture
