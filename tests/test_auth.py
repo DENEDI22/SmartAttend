@@ -87,8 +87,10 @@ def test_me_authenticated(test_client, db_session):
 
 
 def test_me_unauthenticated(test_client):
-    """GET /auth/me with no cookie redirects to /login (AUTH-05)."""
-    pytest.fail("not implemented")
+    """GET /auth/me with no cookie redirects to /login (AUTH-05, D-07)."""
+    response = test_client.get("/auth/me")
+    assert response.status_code == 303
+    assert response.headers["location"] == "/login"
 
 
 # ── Plan 03: Role enforcement (AUTH-06) ────────────────────────────────────

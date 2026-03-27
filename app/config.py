@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     # Network
     server_ip: str = "localhost"
 
+    # Admin bootstrap (D-13, D-14)
+    admin_email: str = ""
+    admin_password: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
