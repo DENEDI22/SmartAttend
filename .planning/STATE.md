@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 01-foundation plan 01-01 (test scaffold + app skeleton)
-last_updated: "2026-03-27T10:28:14.409Z"
+stopped_at: Completed 01-foundation plan 01-02 (SQLAlchemy models + FastAPI app)
+last_updated: "2026-03-27T10:32:37.506Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 2 of 3
 
 *Updated after each plan completion*
 | Phase 01-foundation P01 | 3 | 2 tasks | 14 files |
+| Phase 01-foundation P02 | 2 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: SQLAlchemy 2.0 DeclarativeBase pattern used — required for Mapped[] typed columns in Plan 02
 - [Phase 01-foundation]: pydantic-settings SettingsConfigDict pattern used — v2 API compliance, inner class Config silently broken
 - [Phase 01-foundation]: lru_cache on get_settings() with cache_clear() in test fixtures — prevents settings bleed between tests
+- [Phase 01-foundation]: ScheduleEntry has NO subject field — dropped per user decision D-07
+- [Phase 01-foundation]: AttendanceRecord UniqueConstraint on (student_id, token_id) prevents duplicate check-ins (D-11)
+- [Phase 01-foundation]: requirements.txt pins all 10 packages including later-phase deps to prevent Docker layer cache invalidation
 
 ### Pending Todos
 
@@ -74,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T10:28:14.404Z
-Stopped at: Completed 01-foundation plan 01-01 (test scaffold + app skeleton)
+Last session: 2026-03-27T10:32:37.501Z
+Stopped at: Completed 01-foundation plan 01-02 (SQLAlchemy models + FastAPI app)
 Resume file: None

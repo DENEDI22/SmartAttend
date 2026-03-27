@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 Plans:
 - [x] 01-01-PLAN.md — Test scaffold + project skeleton (config.py, database.py, directory layout)
-- [ ] 01-02-PLAN.md — All 5 SQLAlchemy models + main.py lifespan + requirements.txt
+- [x] 01-02-PLAN.md — All 5 SQLAlchemy models + main.py lifespan + requirements.txt
 - [ ] 01-03-PLAN.md — Docker layer (Dockerfile, mosquitto.conf, docker-compose.yml, .env.example)
 
 ### Phase 2: Authentication
@@ -117,7 +117,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Not started | - |
+| 1. Foundation | 2/3 | In Progress|  |
 | 2. Authentication | 0/? | Not started | - |
 | 3. Admin Interface | 0/? | Not started | - |
 | 4. Teacher Interface | 0/? | Not started | - |
