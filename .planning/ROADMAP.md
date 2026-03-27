@@ -52,7 +52,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Wave 0: test scaffold (13 stubs), conftest fixtures, Pico CSS download
 - [x] 02-02-PLAN.md — Auth service layer (services/auth.py, dependencies.py, config additions)
-- [ ] 02-03-PLAN.md — Router, templates, main.py wiring, admin seed, all 13 tests green
+- [x] 02-03-PLAN.md — Router, templates, main.py wiring, admin seed, all 13 tests green
 
 ### Phase 3: Admin Interface
 **Goal**: Admin can manage devices, users, and the timetable through a web UI

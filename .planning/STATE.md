@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 02-authentication-02-02-PLAN.md
-last_updated: "2026-03-27T11:50:06.285Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02-authentication-02-03-PLAN.md
+last_updated: "2026-03-27T11:56:11.342Z"
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Plan: 3 of 3
 | Phase 01-foundation P03 | 3 | 2 tasks | 6 files |
 | Phase 02-authentication P01 | 136s | 2 tasks | 3 files |
 | Phase 02-authentication P02 | 138 | 2 tasks | 4 files |
+| Phase 02-authentication P03 | 5min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,9 @@ Recent decisions affecting current work:
 - [Phase 02-authentication]: get_current_user raises HTTPException(303) not 401 — browser-friendly redirect for Jinja2 UI
 - [Phase 02-authentication]: require_role raises 403 (not redirect) — authenticated but unauthorized user, different UX
 - [Phase 02-authentication]: create_access_token takes explicit expires_delta — caller chooses 8h admin/teacher vs 1h student
+- [Phase 02-authentication]: Template dir at app/templates — Jinja2Templates instantiated in router
+- [Phase 02-authentication]: Admin seed placed in lifespan — idempotent, no-op if admin row exists
+- [Phase 02-authentication]: bcrypt pinned to 4.x — bcrypt 5.x breaks passlib 1.7.4
 
 ### Pending Todos
 
@@ -89,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T11:50:06.281Z
-Stopped at: Completed 02-authentication-02-02-PLAN.md
+Last session: 2026-03-27T11:56:11.338Z
+Stopped at: Completed 02-authentication-02-03-PLAN.md
 Resume file: None
