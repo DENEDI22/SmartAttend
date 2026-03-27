@@ -44,12 +44,36 @@ def test_login_cookie_httponly(test_client, db_session):
 
 def test_token_expiry_admin(db_session):
     """Admin token expires in 8 hours — JWT exp claim is within 10s of now+8h (AUTH-03)."""
-    pytest.fail("not implemented")
+    from datetime import datetime, timedelta, timezone
+    from jose import jwt
+    from app.services.auth import create_access_token, ALGORITHM
+    from app.config import get_settings
+
+    token = create_access_token(
+        data={"sub": "1", "role": "admin"},
+        expires_delta=timedelta(hours=8),
+    )
+    payload = jwt.decode(token, get_settings().secret_key, algorithms=[ALGORITHM])
+    exp = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
+    expected = datetime.now(timezone.utc) + timedelta(hours=8)
+    assert abs((exp - expected).total_seconds()) < 10
 
 
 def test_token_expiry_student(db_session):
     """Student token expires in 1 hour — JWT exp claim is within 10s of now+1h (AUTH-03)."""
-    pytest.fail("not implemented")
+    from datetime import datetime, timedelta, timezone
+    from jose import jwt
+    from app.services.auth import create_access_token, ALGORITHM
+    from app.config import get_settings
+
+    token = create_access_token(
+        data={"sub": "1", "role": "student"},
+        expires_delta=timedelta(hours=1),
+    )
+    payload = jwt.decode(token, get_settings().secret_key, algorithms=[ALGORITHM])
+    exp = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
+    expected = datetime.now(timezone.utc) + timedelta(hours=1)
+    assert abs((exp - expected).total_seconds()) < 10
 
 
 def test_logout(test_client, db_session):
