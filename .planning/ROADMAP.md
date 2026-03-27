@@ -32,7 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Configuration loads cleanly from `.env` via pydantic-settings with no hard-coded values
   4. The Docker image builds successfully for linux/arm64 and linux/arm/v7
   5. `.env.example` documents every required environment variable
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [x] 01-01-PLAN.md — Test scaffold + project skeleton (config.py, database.py, directory layout)
+- [ ] 01-02-PLAN.md — All 5 SQLAlchemy models + main.py lifespan + requirements.txt
+- [ ] 01-03-PLAN.md — Docker layer (Dockerfile, mosquitto.conf, docker-compose.yml, .env.example)
 
 ### Phase 2: Authentication
 **Goal**: Users can securely log in and out with roles enforced across all routes
@@ -113,7 +117,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/? | Not started | - |
+| 1. Foundation | 0/3 | Not started | - |
 | 2. Authentication | 0/? | Not started | - |
 | 3. Admin Interface | 0/? | Not started | - |
 | 4. Teacher Interface | 0/? | Not started | - |
