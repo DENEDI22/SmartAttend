@@ -1,0 +1,11 @@
+fastapi==0.135.2
+uvicorn[standard]==0.42.0
+sqlalchemy==2.0.48
+pydantic-settings==2.13.1
+jinja2==3.1.6
+python-multipart==0.0.22
+# Pinned for later phases — install now to avoid Docker layer cache invalidation:
+paho-mqtt==2.1.0
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
+apscheduler==3.11.2
