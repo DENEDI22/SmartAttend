@@ -1,2 +1,7 @@
-# Model imports go here — populated in Plan 02.
-# This file must be imported before Base.metadata.create_all() is called.
+from app.models.user import User
+from app.models.device import Device
+from app.models.schedule_entry import ScheduleEntry
+from app.models.attendance_token import AttendanceToken
+from app.models.attendance_record import AttendanceRecord
+
+__all__ = ["User", "Device", "ScheduleEntry", "AttendanceToken", "AttendanceRecord"]
