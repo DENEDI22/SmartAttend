@@ -50,7 +50,7 @@ Plans:
   5. GET `/auth/me` returns the current user's info when authenticated
 **Plans**: 3 plans
 Plans:
-- [ ] 02-01-PLAN.md — Wave 0: test scaffold (13 stubs), conftest fixtures, Pico CSS download
+- [x] 02-01-PLAN.md — Wave 0: test scaffold (13 stubs), conftest fixtures, Pico CSS download
 - [ ] 02-02-PLAN.md — Auth service layer (services/auth.py, dependencies.py, config additions)
 - [ ] 02-03-PLAN.md — Router, templates, main.py wiring, admin seed, all 13 tests green
 
@@ -121,7 +121,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/3 | Complete    | 2026-03-27 |
-| 2. Authentication | 0/3 | Not started | - |
+| 2. Authentication | 1/3 | In Progress|  |
 | 3. Admin Interface | 0/? | Not started | - |
 | 4. Teacher Interface | 0/? | Not started | - |
 | 5. Student Check-in | 0/? | Not started | - |

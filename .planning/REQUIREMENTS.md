@@ -18,13 +18,13 @@
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can log in with username and password via POST `/auth/login`
-- [ ] **AUTH-02**: Server sets an HTTP-only JWT cookie on successful login
-- [ ] **AUTH-03**: JWT expires after 8 hours for admin/teacher, 1 hour for students
-- [ ] **AUTH-04**: User can log out via POST `/auth/logout` (cookie cleared)
-- [ ] **AUTH-05**: GET `/auth/me` returns current user info for authenticated users
-- [ ] **AUTH-06**: `require_role(*roles)` dependency rejects wrong roles with 403
-- [ ] **AUTH-07**: Login page (`/login`) renders and submits correctly
+- [x] **AUTH-01**: User can log in with username and password via POST `/auth/login`
+- [x] **AUTH-02**: Server sets an HTTP-only JWT cookie on successful login
+- [x] **AUTH-03**: JWT expires after 8 hours for admin/teacher, 1 hour for students
+- [x] **AUTH-04**: User can log out via POST `/auth/logout` (cookie cleared)
+- [x] **AUTH-05**: GET `/auth/me` returns current user info for authenticated users
+- [x] **AUTH-06**: `require_role(*roles)` dependency rejects wrong roles with 403
+- [x] **AUTH-07**: Login page (`/login`) renders and submits correctly
 
 ### Admin
 
@@ -121,13 +121,13 @@
 | FOUND-06 | Phase 1 | Complete |
 | FOUND-07 | Phase 1 | Complete |
 | FOUND-08 | Phase 1 | Complete |
-| AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
-| AUTH-03 | Phase 2 | Pending |
-| AUTH-04 | Phase 2 | Pending |
-| AUTH-05 | Phase 2 | Pending |
-| AUTH-06 | Phase 2 | Pending |
-| AUTH-07 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Complete |
+| AUTH-02 | Phase 2 | Complete |
+| AUTH-03 | Phase 2 | Complete |
+| AUTH-04 | Phase 2 | Complete |
+| AUTH-05 | Phase 2 | Complete |
+| AUTH-06 | Phase 2 | Complete |
+| AUTH-07 | Phase 2 | Complete |
 | ADMIN-01 | Phase 3 | Pending |
 | ADMIN-02 | Phase 3 | Pending |
 | ADMIN-03 | Phase 3 | Pending |
