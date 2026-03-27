@@ -113,13 +113,58 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 through FOUND-08 | Phase 1 | Pending |
-| AUTH-01 through AUTH-07 | Phase 2 | Pending |
-| ADMIN-01 through ADMIN-10 | Phase 3 | Pending |
-| TEACH-01 through TEACH-04 | Phase 4 | Pending |
-| CHKIN-01 through CHKIN-07 | Phase 5 | Pending |
-| MQTT-01 through MQTT-09 | Phase 6 | Pending |
-| DUMMY-01 through DUMMY-07 | Phase 7 | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Pending |
+| FOUND-07 | Phase 1 | Pending |
+| FOUND-08 | Phase 1 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Pending |
+| AUTH-06 | Phase 2 | Pending |
+| AUTH-07 | Phase 2 | Pending |
+| ADMIN-01 | Phase 3 | Pending |
+| ADMIN-02 | Phase 3 | Pending |
+| ADMIN-03 | Phase 3 | Pending |
+| ADMIN-04 | Phase 3 | Pending |
+| ADMIN-05 | Phase 3 | Pending |
+| ADMIN-06 | Phase 3 | Pending |
+| ADMIN-07 | Phase 3 | Pending |
+| ADMIN-08 | Phase 3 | Pending |
+| ADMIN-09 | Phase 3 | Pending |
+| ADMIN-10 | Phase 3 | Pending |
+| TEACH-01 | Phase 4 | Pending |
+| TEACH-02 | Phase 4 | Pending |
+| TEACH-03 | Phase 4 | Pending |
+| TEACH-04 | Phase 4 | Pending |
+| CHKIN-01 | Phase 5 | Pending |
+| CHKIN-02 | Phase 5 | Pending |
+| CHKIN-03 | Phase 5 | Pending |
+| CHKIN-04 | Phase 5 | Pending |
+| CHKIN-05 | Phase 5 | Pending |
+| CHKIN-06 | Phase 5 | Pending |
+| CHKIN-07 | Phase 5 | Pending |
+| MQTT-01 | Phase 6 | Pending |
+| MQTT-02 | Phase 6 | Pending |
+| MQTT-03 | Phase 6 | Pending |
+| MQTT-04 | Phase 6 | Pending |
+| MQTT-05 | Phase 6 | Pending |
+| MQTT-06 | Phase 6 | Pending |
+| MQTT-07 | Phase 6 | Pending |
+| MQTT-08 | Phase 6 | Pending |
+| MQTT-09 | Phase 6 | Pending |
+| DUMMY-01 | Phase 7 | Pending |
+| DUMMY-02 | Phase 7 | Pending |
+| DUMMY-03 | Phase 7 | Pending |
+| DUMMY-04 | Phase 7 | Pending |
+| DUMMY-05 | Phase 7 | Pending |
+| DUMMY-06 | Phase 7 | Pending |
+| DUMMY-07 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 44 total
@@ -128,4 +173,4 @@
 
 ---
 *Requirements defined: 2026-03-27*
-*Last updated: 2026-03-27 after initial definition*
+*Last updated: 2026-03-27 after roadmap creation*
