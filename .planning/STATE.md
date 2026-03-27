@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 02-authentication-02-01-PLAN.md
-last_updated: "2026-03-27T11:45:46.516Z"
+stopped_at: Completed 02-authentication-02-02-PLAN.md
+last_updated: "2026-03-27T11:50:06.285Z"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 ## Current Position
 
 Phase: 02 (authentication) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Plan: 2 of 3
 | Phase 01-foundation P02 | 2 | 2 tasks | 8 files |
 | Phase 01-foundation P03 | 3 | 2 tasks | 6 files |
 | Phase 02-authentication P01 | 136s | 2 tasks | 3 files |
+| Phase 02-authentication P02 | 138 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: dummy_client Phase 1 stub uses time.sleep(60) loop — Phase 7 replaces with full MQTT implementation
 - [Phase 02-authentication]: Patch module-level engine in db_session fixture to prevent lifespan create_all hitting production DB path
 - [Phase 02-authentication]: test_client uses follow_redirects=False to allow auth tests to inspect 303 redirects directly
+- [Phase 02-authentication]: get_current_user raises HTTPException(303) not 401 — browser-friendly redirect for Jinja2 UI
+- [Phase 02-authentication]: require_role raises 403 (not redirect) — authenticated but unauthorized user, different UX
+- [Phase 02-authentication]: create_access_token takes explicit expires_delta — caller chooses 8h admin/teacher vs 1h student
 
 ### Pending Todos
 
@@ -85,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T11:45:46.511Z
-Stopped at: Completed 02-authentication-02-01-PLAN.md
+Last session: 2026-03-27T11:50:06.281Z
+Stopped at: Completed 02-authentication-02-02-PLAN.md
 Resume file: None
