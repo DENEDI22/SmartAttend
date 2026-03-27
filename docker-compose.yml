@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+  server:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - mqtt
+    volumes:
+      - ./data:/app/data    # SQLite database persists across restarts
+    restart: unless-stopped
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config:ro
+      - mosquitto-data:/mosquitto/data
+    restart: unless-stopped
+
+  client-e101:
+    build: ./dummy_client
+    environment:
+      - DEVICE_ID=e101
+      - ROOM=E101
+      - MQTT_BROKER=mqtt
+      - MQTT_PORT=1883
+      - LUX_VALUE=400
+    depends_on:
+      - mqtt
+    restart: unless-stopped
+
+  client-e102:
+    build: ./dummy_client
+    environment:
+      - DEVICE_ID=e102
+      - ROOM=E102
+      - MQTT_BROKER=mqtt
+      - MQTT_PORT=1883
+      - LUX_VALUE=350
+    depends_on:
+      - mqtt
+    restart: unless-stopped
+
+  client-e103:
+    build: ./dummy_client
+    environment:
+      - DEVICE_ID=e103
+      - ROOM=E103
+      - MQTT_BROKER=mqtt
+      - MQTT_PORT=1883
+      - LUX_VALUE=500
+    depends_on:
+      - mqtt
+    restart: unless-stopped
+
+volumes:
+  mosquitto-data:
