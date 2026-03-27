@@ -11,10 +11,10 @@
 - [x] **FOUND-02**: `config.py` loads all settings from `.env` via pydantic-settings
 - [x] **FOUND-03**: `database.py` provides SQLAlchemy engine, session factory, and `Base`
 - [x] **FOUND-04**: All 5 models exist: User, Device (with `is_enabled`), ScheduleEntry, AttendanceToken, AttendanceRecord
-- [ ] **FOUND-05**: `docker-compose.yml` starts server + mqtt + 3 dummy client stubs cleanly
-- [ ] **FOUND-06**: `Dockerfile` builds a multi-arch image (linux/arm64, linux/arm/v7)
-- [ ] **FOUND-07**: `mosquitto/config/mosquitto.conf` is present and correct
-- [ ] **FOUND-08**: `.env.example` documents all required environment variables
+- [x] **FOUND-05**: `docker-compose.yml` starts server + mqtt + 3 dummy client stubs cleanly
+- [x] **FOUND-06**: `Dockerfile` builds a multi-arch image (linux/arm64, linux/arm/v7)
+- [x] **FOUND-07**: `mosquitto/config/mosquitto.conf` is present and correct
+- [x] **FOUND-08**: `.env.example` documents all required environment variables
 
 ### Authentication
 
@@ -117,10 +117,10 @@
 | FOUND-02 | Phase 1 | Complete |
 | FOUND-03 | Phase 1 | Complete |
 | FOUND-04 | Phase 1 | Complete |
-| FOUND-05 | Phase 1 | Pending |
-| FOUND-06 | Phase 1 | Pending |
-| FOUND-07 | Phase 1 | Pending |
-| FOUND-08 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Complete |
+| FOUND-06 | Phase 1 | Complete |
+| FOUND-07 | Phase 1 | Complete |
+| FOUND-08 | Phase 1 | Complete |
 | AUTH-01 | Phase 2 | Pending |
 | AUTH-02 | Phase 2 | Pending |
 | AUTH-03 | Phase 2 | Pending |

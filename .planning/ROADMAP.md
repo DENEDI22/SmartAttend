@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Test scaffold + project skeleton (config.py, database.py, directory layout)
 - [x] 01-02-PLAN.md — All 5 SQLAlchemy models + main.py lifespan + requirements.txt
-- [ ] 01-03-PLAN.md — Docker layer (Dockerfile, mosquitto.conf, docker-compose.yml, .env.example)
+- [x] 01-03-PLAN.md — Docker layer (Dockerfile, mosquitto.conf, docker-compose.yml, .env.example)
 
 ### Phase 2: Authentication
 **Goal**: Users can securely log in and out with roles enforced across all routes
