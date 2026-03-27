@@ -48,8 +48,11 @@ Plans:
   3. User can log out and the cookie is cleared
   4. Accessing a route with the wrong role returns a 403 response
   5. GET `/auth/me` returns the current user's info when authenticated
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 3 plans
+Plans:
+- [ ] 02-01-PLAN.md — Wave 0: test scaffold (13 stubs), conftest fixtures, Pico CSS download
+- [ ] 02-02-PLAN.md — Auth service layer (services/auth.py, dependencies.py, config additions)
+- [ ] 02-03-PLAN.md — Router, templates, main.py wiring, admin seed, all 13 tests green
 
 ### Phase 3: Admin Interface
 **Goal**: Admin can manage devices, users, and the timetable through a web UI
@@ -118,7 +121,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/3 | Complete    | 2026-03-27 |
-| 2. Authentication | 0/? | Not started | - |
+| 2. Authentication | 0/3 | Not started | - |
 | 3. Admin Interface | 0/? | Not started | - |
 | 4. Teacher Interface | 0/? | Not started | - |
 | 5. Student Check-in | 0/? | Not started | - |
