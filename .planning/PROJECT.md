@@ -13,10 +13,10 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 ### Validated
 
 - [x] Project foundation: FastAPI app, SQLAlchemy models, Docker Compose stack boots on RPi — Validated in Phase 1: Foundation
+- [x] Auth: JWT-based login/logout with role-based access (admin, teacher, student) — Validated in Phase 2: Authentication
+- [x] Admin interface: device management, user management, schedule management — Validated in Phase 3: Admin Interface
 
 ### Active
-- [x] Auth: JWT-based login/logout with role-based access (admin, teacher, student) — Validated in Phase 2: Authentication
-- [ ] Admin interface: device management, user management, schedule management
 - [ ] Teacher interface: attendance dashboard, attendance list per lesson, CSV export
 - [ ] Student check-in: NFC tap → browser → login → attendance record written
 - [ ] MQTT + Scheduler: token lifecycle end-to-end, dummy clients receive URLs
@@ -75,4 +75,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-27 — Phase 2 (Authentication) complete*
+*Last updated: 2026-03-29 — Phase 3 (Admin Interface) complete*
