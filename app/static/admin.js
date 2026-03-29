@@ -23,6 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     inputs.forEach(el => el.addEventListener('input', updateButtons));
 
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        const submitForm = document.createElement('form');
+        submitForm.method = 'POST';
+        submitForm.action = form.dataset.action || '/admin/devices/update';
+        inputs.forEach(el => {
+          const hidden = document.createElement('input');
+          hidden.type = 'hidden';
+          hidden.name = el.name;
+          hidden.value = el.value;
+          submitForm.appendChild(hidden);
+        });
+        document.body.appendChild(submitForm);
+        submitForm.submit();
+      });
+    }
+
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         inputs.forEach(el => { el.value = el.dataset.original; });

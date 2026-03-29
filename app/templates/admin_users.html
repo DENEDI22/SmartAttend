@@ -5,5 +5,131 @@
   <h1>Benutzerverwaltung</h1>
   <p>Benutzer erstellen und verwalten</p>
 </hgroup>
-<p>Keine Benutzer vorhanden.</p>
+
+{% if users %}
+<div id="edit-form" data-action="/admin/users/update">
+  <figure>
+    <table>
+      <thead>
+        <tr>
+          <th>Vorname</th>
+          <th>Nachname</th>
+          <th>E-Mail</th>
+          <th>Rolle</th>
+          <th>Klasse</th>
+          <th>Status</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr{% if not u.is_active %} style="color: var(--pico-muted-color)"{% endif %}>
+          <td>
+            <input type="text" name="first_name_{{ u.id }}"
+                   value="{{ u.first_name }}"
+                   data-original="{{ u.first_name }}"
+                   style="margin: 0; padding: 4px 8px;">
+          </td>
+          <td>
+            <input type="text" name="last_name_{{ u.id }}"
+                   value="{{ u.last_name }}"
+                   data-original="{{ u.last_name }}"
+                   style="margin: 0; padding: 4px 8px;">
+          </td>
+          <td>{{ u.email }}</td>
+          <td>
+            <select name="role_{{ u.id }}" data-original="{{ u.role }}"
+                    style="margin: 0; padding: 4px 8px;">
+              <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Admin</option>
+              <option value="teacher" {% if u.role == 'teacher' %}selected{% endif %}>Lehrer</option>
+              <option value="student" {% if u.role == 'student' %}selected{% endif %}>Sch&uuml;ler</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="class_name_{{ u.id }}"
+                   value="{{ u.class_name or '' }}"
+                   data-original="{{ u.class_name or '' }}"
+                   list="class-options"
+                   placeholder="z.B. 10A"
+                   style="margin: 0; padding: 4px 8px;">
+          </td>
+          <td>{{ "Aktiv" if u.is_active else "Inaktiv" }}</td>
+          <td>
+            {% if u.is_active and u.id != user.id %}
+            <form method="post" action="/admin/users/{{ u.id }}/deactivate"
+                  onsubmit="return confirm('Benutzer deaktivieren: Soll dieser Benutzer wirklich deaktiviert werden? Anwesenheitsdaten bleiben erhalten.')"
+                  style="margin: 0;">
+              <button type="submit" class="outline secondary"
+                      style="margin: 0; padding: 4px 12px; color: var(--pico-del-color); border-color: var(--pico-del-color);">
+                Deaktivieren
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </figure>
+  <div style="display: flex; gap: 8px;">
+    <button type="button" id="save-btn" disabled>Änderungen speichern</button>
+    <button type="button" id="reset-btn" disabled>Zurücksetzen</button>
+  </div>
+</div>
+
+<datalist id="class-options">
+  {% for cls in school_classes %}
+  <option value="{{ cls.name }}">
+  {% endfor %}
+</datalist>
+{% else %}
+<article>
+  <h2>Keine Benutzer vorhanden</h2>
+  <p>Erstellen Sie den ersten Benutzer über das Formular unten.</p>
+</article>
+{% endif %}
+
+<article>
+  <h2>Neuer Benutzer</h2>
+  <form method="post" action="/admin/users/create">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <label>
+        Vorname
+        <input type="text" name="first_name" required>
+      </label>
+      <label>
+        Nachname
+        <input type="text" name="last_name" required>
+      </label>
+    </div>
+    <label>
+      E-Mail
+      <input type="email" name="email" required>
+    </label>
+    <label>
+      Passwort
+      <input type="password" name="password" required minlength="8">
+    </label>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <label>
+        Rolle
+        <select name="role" required>
+          <option value="admin">Admin</option>
+          <option value="teacher">Lehrer</option>
+          <option value="student" selected>Sch&uuml;ler</option>
+        </select>
+      </label>
+      <label>
+        Klasse
+        <input type="text" name="class_name" list="class-options-create" placeholder="z.B. 10A">
+        <datalist id="class-options-create">
+          {% for cls in school_classes %}
+          <option value="{{ cls.name }}">
+          {% endfor %}
+        </datalist>
+      </label>
+    </div>
+    <button type="submit">Benutzer erstellen</button>
+  </form>
+</article>
 {% endblock %}
