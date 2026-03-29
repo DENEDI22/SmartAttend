@@ -1,5 +1,7 @@
 """Admin interface router: device management, user management, schedule CRUD."""
-from fastapi import APIRouter, Depends, Form, Request
+from datetime import time as dt_time
+
+from fastapi import APIRouter, Depends, Form, Query, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -7,12 +9,35 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.dependencies import require_role
 from app.models.device import Device
+from app.models.schedule_entry import ScheduleEntry
 from app.models.school_class import SchoolClass
 from app.models.user import User
 from app.services.auth import get_password_hash
 
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(prefix="/admin", tags=["admin"])
+
+WEEKDAY_NAMES = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+
+
+def check_schedule_conflict(
+    db: Session,
+    device_id: int,
+    weekday: int,
+    start_time: dt_time,
+    end_time: dt_time,
+    exclude_id: int | None = None,
+) -> ScheduleEntry | None:
+    """Check for overlapping schedule entries. Two ranges [s1,e1) and [s2,e2) overlap iff s1 < e2 AND s2 < e1."""
+    query = db.query(ScheduleEntry).filter(
+        ScheduleEntry.device_id == device_id,
+        ScheduleEntry.weekday == weekday,
+        ScheduleEntry.start_time < end_time,
+        ScheduleEntry.end_time > start_time,
+    )
+    if exclude_id:
+        query = query.filter(ScheduleEntry.id != exclude_id)
+    return query.first()
 
 
 @router.get("")
@@ -27,12 +52,47 @@ async def devices_page(
     user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
-    """Device management page with inline-editable table (ADMIN-01)."""
+    """Device management page with inline-editable table and schedule sections (ADMIN-01, ADMIN-07)."""
     devices = db.query(Device).order_by(Device.device_id).all()
+    # Build schedule data per device
+    device_schedules = {}
+    for device in devices:
+        entries = (
+            db.query(ScheduleEntry)
+            .filter(ScheduleEntry.device_id == device.id)
+            .order_by(ScheduleEntry.weekday, ScheduleEntry.start_time)
+            .all()
+        )
+        # Attach teacher names
+        enriched = []
+        for entry in entries:
+            teacher = db.query(User).filter(User.id == entry.teacher_id).first()
+            enriched.append({
+                "id": entry.id,
+                "class_name": entry.class_name,
+                "teacher_name": f"{teacher.first_name} {teacher.last_name}" if teacher else "\u2014",
+                "weekday": entry.weekday,
+                "weekday_name": WEEKDAY_NAMES[entry.weekday] if 0 <= entry.weekday <= 6 else str(entry.weekday),
+                "start_time": entry.start_time.strftime("%H:%M"),
+                "end_time": entry.end_time.strftime("%H:%M"),
+            })
+        device_schedules[device.id] = enriched
+
+    teachers = db.query(User).filter(User.role == "teacher").order_by(User.last_name).all()
+    school_classes = db.query(SchoolClass).order_by(SchoolClass.name).all()
+
     return templates.TemplateResponse(
         request=request,
         name="admin_devices.html",
-        context={"user": user, "devices": devices, "active_page": "devices"},
+        context={
+            "user": user,
+            "devices": devices,
+            "device_schedules": device_schedules,
+            "teachers": teachers,
+            "school_classes": school_classes,
+            "weekday_names": WEEKDAY_NAMES,
+            "active_page": "devices",
+        },
     )
 
 
@@ -193,3 +253,103 @@ async def users_update(
             u.role = form[role_key]
     db.commit()
     return RedirectResponse(url="/admin/users?msg=Erfolgreich+aktualisiert.", status_code=303)
+
+
+# ── Schedule CRUD (ADMIN-07 through ADMIN-10) ──────────────────────
+
+
+@router.post("/schedule/add")
+async def schedule_add(
+    device_id: int = Form(...),
+    teacher_id: int = Form(...),
+    class_name: str = Form(...),
+    weekday: int = Form(...),
+    start_time: str = Form(...),
+    end_time: str = Form(...),
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Add a schedule entry with overlap detection (ADMIN-08, ADMIN-09)."""
+    st = dt_time.fromisoformat(start_time)
+    et = dt_time.fromisoformat(end_time)
+
+    if st >= et:
+        return RedirectResponse(
+            url="/admin/devices?error=Startzeit+muss+vor+Endzeit+liegen.",
+            status_code=303,
+        )
+
+    # Check conflict (ADMIN-09)
+    conflict = check_schedule_conflict(db, device_id, weekday, st, et)
+    if conflict:
+        teacher = db.query(User).filter(User.id == conflict.teacher_id).first()
+        day_name = WEEKDAY_NAMES[conflict.weekday] if 0 <= conflict.weekday <= 6 else str(conflict.weekday)
+        msg = (
+            f"Zeitkonflikt: Ger\u00e4t ist bereits belegt am {day_name} "
+            f"{conflict.start_time.strftime('%H:%M')}-{conflict.end_time.strftime('%H:%M')} "
+            f"(Klasse {conflict.class_name})."
+        )
+        return RedirectResponse(
+            url=f"/admin/devices?error={msg.replace(' ', '+')}",
+            status_code=303,
+        )
+
+    # Auto-create SchoolClass if needed (per D-14)
+    class_name_clean = class_name.strip()
+    existing_class = db.query(SchoolClass).filter(SchoolClass.name == class_name_clean).first()
+    if not existing_class:
+        db.add(SchoolClass(name=class_name_clean))
+        db.flush()
+
+    entry = ScheduleEntry(
+        device_id=device_id,
+        teacher_id=teacher_id,
+        class_name=class_name_clean,
+        weekday=weekday,
+        start_time=st,
+        end_time=et,
+    )
+    db.add(entry)
+    db.commit()
+    return RedirectResponse(url="/admin/devices?msg=Eintrag+hinzugef%C3%BCgt.", status_code=303)
+
+
+@router.post("/schedule/{entry_id}/delete")
+async def schedule_delete(
+    entry_id: int,
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Delete a schedule entry (ADMIN-10)."""
+    entry = db.query(ScheduleEntry).filter(ScheduleEntry.id == entry_id).first()
+    if not entry:
+        return RedirectResponse(url="/admin/devices?error=Eintrag+nicht+gefunden.", status_code=303)
+    db.delete(entry)
+    db.commit()
+    return RedirectResponse(url="/admin/devices?msg=Erfolgreich+gel%C3%B6scht.", status_code=303)
+
+
+@router.get("/api/schedule/check-conflict")
+async def api_check_conflict(
+    device_id: int = Query(...),
+    weekday: int = Query(...),
+    start_time: str = Query(...),
+    end_time: str = Query(...),
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """JSON API for JS conflict validation (D-17)."""
+    st = dt_time.fromisoformat(start_time)
+    et = dt_time.fromisoformat(end_time)
+    conflict = check_schedule_conflict(db, device_id, weekday, st, et)
+    if conflict:
+        day_name = WEEKDAY_NAMES[conflict.weekday] if 0 <= conflict.weekday <= 6 else str(conflict.weekday)
+        return {
+            "conflict": True,
+            "message": (
+                f"Zeitkonflikt: Ger\u00e4t ist bereits belegt am {day_name} "
+                f"{conflict.start_time.strftime('%H:%M')}-{conflict.end_time.strftime('%H:%M')} "
+                f"(Klasse {conflict.class_name})."
+            ),
+        }
+    return {"conflict": False}
