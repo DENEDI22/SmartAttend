@@ -1,0 +1,78 @@
+{% extends "admin_base.html" %}
+{% block title %}Geräteverwaltung — SmartAttend{% endblock %}
+{% block admin_content %}
+<hgroup>
+  <h1>Geräteverwaltung</h1>
+  <p>Registrierte Geräte und deren Status</p>
+</hgroup>
+
+{% if devices %}
+<div id="edit-form">
+  <figure>
+    <table>
+      <thead>
+        <tr>
+          <th>Gerät-ID</th>
+          <th>Raum</th>
+          <th>Label</th>
+          <th>Status</th>
+          <th>Aktiv</th>
+          <th>Zuletzt gesehen</th>
+          <th>Lux</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for device in devices %}
+        <tr{% if not device.is_enabled %} style="color: var(--pico-muted-color)"{% endif %}>
+          <td>{{ device.device_id }}</td>
+          <td>
+            <input type="text" name="room_{{ device.id }}"
+                   value="{{ device.room or '' }}"
+                   data-original="{{ device.room or '' }}"
+                   placeholder="z.B. R101"
+                   style="margin: 0; padding: 4px 8px;">
+          </td>
+          <td>
+            <input type="text" name="label_{{ device.id }}"
+                   value="{{ device.label or '' }}"
+                   data-original="{{ device.label or '' }}"
+                   placeholder="z.B. Raum 101"
+                   style="margin: 0; padding: 4px 8px;">
+          </td>
+          <td>
+            {% if device.is_online %}
+              <span style="color: #2e7d32">&#9679; Online</span>
+            {% else %}
+              <span style="color: var(--pico-muted-color)">&#9679; Offline</span>
+            {% endif %}
+          </td>
+          <td>{{ "Ja" if device.is_enabled else "Nein" }}</td>
+          <td>{{ device.last_seen.strftime('%d.%m.%Y %H:%M') if device.last_seen else '--' }}</td>
+          <td>{{ '%.1f' % device.last_lux if device.last_lux is not none else '--' }}</td>
+          <td>
+            <form method="post" action="/admin/devices/{{ device.id }}/toggle" style="margin: 0; display: inline;">
+              <button type="submit" class="outline{% if device.is_enabled %} secondary{% endif %}" style="margin: 0; padding: 4px 12px;">
+                {{ "Deaktivieren" if device.is_enabled else "Aktivieren" }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </figure>
+  <div style="display: flex; gap: 8px;">
+    <button type="button" id="save-btn" disabled>Änderungen speichern</button>
+    <button type="button" id="reset-btn" disabled>Zurücksetzen</button>
+  </div>
+</div>
+{% else %}
+<article>
+  <h2>Keine Geräte registriert</h2>
+  <p>Geräte werden automatisch registriert, sobald sie sich per MQTT verbinden.</p>
+</article>
+{% endif %}
+
+<!-- Schedule section per device added in Plan 04 -->
+{% endblock %}
