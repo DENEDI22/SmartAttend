@@ -38,18 +38,18 @@ def test_update_device_room_label(admin_client, db_session, seed_device):
 # ── ADMIN-03: Enable/disable device ──────────────────────────────
 def test_toggle_device_enabled(admin_client, db_session, seed_device):
     """POST /admin/devices/{id}/toggle flips is_enabled (ADMIN-03)."""
-    assert seed_device.is_enabled is False
+    original = seed_device.is_enabled
 
     resp = admin_client.post(f"/admin/devices/{seed_device.id}/toggle")
     assert resp.status_code == 303
 
     db_session.refresh(seed_device)
-    assert seed_device.is_enabled is True
+    assert seed_device.is_enabled is (not original)
 
     # Toggle back
     resp = admin_client.post(f"/admin/devices/{seed_device.id}/toggle")
     db_session.refresh(seed_device)
-    assert seed_device.is_enabled is False
+    assert seed_device.is_enabled is original
 
 
 # ── ADMIN-04: View all users ─────────────────────────────────────
