@@ -27,19 +27,110 @@ def test_toggle_device_enabled(admin_client, db_session, seed_device):
 # -- ADMIN-04: View all users -------------------------------------------------
 def test_users_page_shows_users(admin_client, db_session):
     """GET /admin/users shows user table with name, role, class (ADMIN-04)."""
-    pytest.skip("Plan 03 implements this")
+    # admin_client already created an admin user during login
+    resp = admin_client.get("/admin/users", follow_redirects=True)
+    assert resp.status_code == 200
+    assert "Admin" in resp.text
+    assert "admin@test.com" in resp.text
+    assert "Aktiv" in resp.text
 
 
 # -- ADMIN-05: Create new user ------------------------------------------------
 def test_create_user(admin_client, db_session, seed_school_class):
     """POST /admin/users/create creates a new user with hashed password (ADMIN-05)."""
-    pytest.skip("Plan 03 implements this")
+    resp = admin_client.post(
+        "/admin/users/create",
+        data={
+            "first_name": "Max",
+            "last_name": "Mustermann",
+            "email": "max@test.com",
+            "password": "securepass123",
+            "role": "student",
+            "class_name": "10A",
+        },
+    )
+    assert resp.status_code == 303
+    assert "msg=" in resp.headers["location"]
+
+    from app.models.user import User
+    new_user = db_session.query(User).filter(User.email == "max@test.com").first()
+    assert new_user is not None
+    assert new_user.first_name == "Max"
+    assert new_user.last_name == "Mustermann"
+    assert new_user.role == "student"
+    assert new_user.class_name == "10A"
+    assert new_user.is_active is True
+    assert new_user.password_hash != "securepass123"  # hashed, not plain
 
 
 # -- ADMIN-06: Deactivate user ------------------------------------------------
 def test_deactivate_user(admin_client, db_session):
     """POST /admin/users/{id}/deactivate sets is_active=False (ADMIN-06)."""
-    pytest.skip("Plan 03 implements this")
+    from app.models.user import User
+    from app.services.auth import get_password_hash
+
+    target = User(
+        email="deactivate-me@test.com",
+        first_name="Delete",
+        last_name="Me",
+        role="student",
+        password_hash=get_password_hash("pass"),
+        is_active=True,
+    )
+    db_session.add(target)
+    db_session.commit()
+    db_session.refresh(target)
+
+    resp = admin_client.post(f"/admin/users/{target.id}/deactivate")
+    assert resp.status_code == 303
+
+    db_session.refresh(target)
+    assert target.is_active is False
+
+    # User still visible in list (soft delete, per D-10)
+    resp = admin_client.get("/admin/users", follow_redirects=True)
+    assert "deactivate-me@test.com" in resp.text
+    assert "Inaktiv" in resp.text
+
+
+# -- ADMIN-05 edge case: duplicate email --------------------------------------
+def test_create_user_duplicate_email(admin_client, db_session):
+    """POST /admin/users/create with duplicate email shows error (ADMIN-05 edge case)."""
+    # admin@test.com already exists from admin_client fixture
+    resp = admin_client.post(
+        "/admin/users/create",
+        data={
+            "first_name": "Dup",
+            "last_name": "User",
+            "email": "admin@test.com",
+            "password": "password123",
+            "role": "student",
+            "class_name": "",
+        },
+    )
+    assert resp.status_code == 303
+    assert "error=" in resp.headers["location"]
+
+
+# -- D-14: auto-create SchoolClass --------------------------------------------
+def test_create_user_auto_creates_school_class(admin_client, db_session):
+    """POST /admin/users/create with new class_name auto-creates SchoolClass (D-14)."""
+    resp = admin_client.post(
+        "/admin/users/create",
+        data={
+            "first_name": "New",
+            "last_name": "Class",
+            "email": "newclass@test.com",
+            "password": "password123",
+            "role": "student",
+            "class_name": "11B",
+        },
+    )
+    assert resp.status_code == 303
+
+    from app.models.school_class import SchoolClass
+    sc = db_session.query(SchoolClass).filter(SchoolClass.name == "11B").first()
+    assert sc is not None
 
 
 # -- ADMIN-07: View schedule entries per device --------------------------------
