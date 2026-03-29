@@ -74,5 +74,103 @@
 </article>
 {% endif %}
 
-<!-- Schedule section per device added in Plan 04 -->
+{% if devices %}
+<h2 style="margin-top: 2rem;">Stundenplan pro Ger&auml;t</h2>
+{% for device in devices %}
+<details style="margin-bottom: 1rem;">
+  <summary>
+    <strong>{{ device.device_id }}</strong>
+    {% if device.room %} &mdash; {{ device.room }}{% endif %}
+    {% if device.label %} ({{ device.label }}){% endif %}
+    <small>({{ device_schedules[device.id]|length }} Eintr&auml;ge)</small>
+  </summary>
+
+  {% if device_schedules[device.id] %}
+  <figure>
+    <table>
+      <thead>
+        <tr>
+          <th>Klasse</th>
+          <th>Lehrer</th>
+          <th>Tag</th>
+          <th>Zeitraum</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in device_schedules[device.id] %}
+        <tr>
+          <td>{{ entry.class_name }}</td>
+          <td>{{ entry.teacher_name }}</td>
+          <td>{{ entry.weekday_name }}</td>
+          <td>{{ entry.start_time }} &ndash; {{ entry.end_time }}</td>
+          <td>
+            <form method="post" action="/admin/schedule/{{ entry.id }}/delete"
+                  onsubmit="return confirm('Eintrag l\u00f6schen: Soll dieser Stundenplaneintrag wirklich gel\u00f6scht werden?')"
+                  style="margin: 0;">
+              <button type="submit" class="outline secondary"
+                      style="margin: 0; padding: 4px 12px; color: var(--pico-del-color); border-color: var(--pico-del-color);">
+                L&ouml;schen
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </figure>
+  {% else %}
+  <p><em>Noch keine Eintr&auml;ge f&uuml;r dieses Ger&auml;t.</em></p>
+  {% endif %}
+
+  <article>
+    <h3>Eintrag hinzuf&uuml;gen</h3>
+    <form method="post" action="/admin/schedule/add" data-conflict-check>
+      <input type="hidden" name="device_id" value="{{ device.id }}">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <label>
+          Klasse
+          <input type="text" name="class_name" required list="schedule-class-options" placeholder="z.B. 10A">
+        </label>
+        <label>
+          Lehrer
+          <select name="teacher_id" required>
+            <option value="">&mdash; Lehrer w&auml;hlen &mdash;</option>
+            {% for t in teachers %}
+            <option value="{{ t.id }}">{{ t.first_name }} {{ t.last_name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+        <label>
+          Tag
+          <select name="weekday" required>
+            {% for i in range(7) %}
+            <option value="{{ i }}">{{ weekday_names[i] }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>
+          Startzeit
+          <input type="time" name="start_time" required>
+        </label>
+        <label>
+          Endzeit
+          <input type="time" name="end_time" required>
+        </label>
+      </div>
+      <small data-conflict-error style="color: var(--pico-del-color); display: block; margin-bottom: 8px;"></small>
+      <button type="submit" data-add-btn>Hinzuf&uuml;gen</button>
+    </form>
+  </article>
+</details>
+{% endfor %}
+
+<datalist id="schedule-class-options">
+  {% for cls in school_classes %}
+  <option value="{{ cls.name }}">
+  {% endfor %}
+</datalist>
+{% endif %}
 {% endblock %}

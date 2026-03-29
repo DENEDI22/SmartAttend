@@ -4,6 +4,7 @@ import app.database as _app_database
 import app.main as _app_main
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
 from app.main import app
 from app.database import Base, get_db
@@ -34,6 +35,7 @@ def db_session(override_settings, monkeypatch):
     test_engine = create_engine(
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
     )
     # Patch the module-level engine so the lifespan create_all uses in-memory DB
     monkeypatch.setattr(_app_database, "engine", test_engine)

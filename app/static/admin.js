@@ -67,9 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Schedule conflict check (used in Plan 04) ---
-  const conflictForm = document.querySelector('[data-conflict-check]');
-  if (conflictForm) {
+  // --- Schedule conflict check (multiple forms, one per device) ---
+  document.querySelectorAll('[data-conflict-check]').forEach(conflictForm => {
     const addBtn = conflictForm.querySelector('[data-add-btn]');
     const errorDiv = conflictForm.querySelector('[data-conflict-error]');
     const fields = ['device_id', 'weekday', 'start_time', 'end_time'];
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
       if (!allFilled) {
-        if (addBtn) addBtn.disabled = true;
+        if (addBtn) addBtn.disabled = false;
         if (errorDiv) errorDiv.textContent = '';
         return;
       }
@@ -110,5 +109,5 @@ document.addEventListener('DOMContentLoaded', () => {
       const el = conflictForm.querySelector(`[name="${f}"]`);
       if (el) el.addEventListener('change', checkConflict);
     });
-  }
+  });
 });

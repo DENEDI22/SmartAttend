@@ -164,25 +164,201 @@ def test_create_user_auto_creates_school_class(admin_client, db_session):
 # ── ADMIN-07: View schedule entries per device ───────────────────
 def test_device_schedule_entries_shown(admin_client, db_session, seed_device, seed_teacher, seed_school_class):
     """GET /admin/devices shows schedule entries within device details (ADMIN-07)."""
-    pytest.skip("Plan 04 implements this")
+    from datetime import time
+    from app.models.schedule_entry import ScheduleEntry
+
+    entry = ScheduleEntry(
+        device_id=seed_device.id,
+        teacher_id=seed_teacher.id,
+        class_name="10A",
+        weekday=0,  # Monday
+        start_time=time(8, 0),
+        end_time=time(9, 30),
+    )
+    db_session.add(entry)
+    db_session.commit()
+
+    resp = admin_client.get("/admin/devices")
+    assert resp.status_code == 200
+    assert "10A" in resp.text
+    assert "Montag" in resp.text
+    assert "08:00" in resp.text
+    assert "09:30" in resp.text
 
 
 # ── ADMIN-08: Add schedule entry ─────────────────────────────────
 def test_add_schedule_entry(admin_client, db_session, seed_device, seed_teacher, seed_school_class):
     """POST /admin/schedule/add creates a ScheduleEntry (ADMIN-08)."""
-    pytest.skip("Plan 04 implements this")
+    resp = admin_client.post(
+        "/admin/schedule/add",
+        data={
+            "device_id": str(seed_device.id),
+            "teacher_id": str(seed_teacher.id),
+            "class_name": "10A",
+            "weekday": "1",  # Tuesday
+            "start_time": "10:00",
+            "end_time": "11:30",
+        },
+    )
+    assert resp.status_code == 303
+    assert "msg=" in resp.headers["location"]
+
+    from app.models.schedule_entry import ScheduleEntry
+    entry = db_session.query(ScheduleEntry).first()
+    assert entry is not None
+    assert entry.device_id == seed_device.id
+    assert entry.teacher_id == seed_teacher.id
+    assert entry.class_name == "10A"
+    assert entry.weekday == 1
+    assert entry.start_time.strftime("%H:%M") == "10:00"
+    assert entry.end_time.strftime("%H:%M") == "11:30"
 
 
 # ── ADMIN-09: Reject conflicting schedule ─────────────────────────
 def test_schedule_conflict_rejected(admin_client, db_session, seed_device, seed_teacher, seed_school_class):
     """POST /admin/schedule/add with overlapping time is rejected (ADMIN-09)."""
-    pytest.skip("Plan 04 implements this")
+    from datetime import time
+    from app.models.schedule_entry import ScheduleEntry
+
+    # Create existing entry: Monday 08:00-09:30
+    entry = ScheduleEntry(
+        device_id=seed_device.id,
+        teacher_id=seed_teacher.id,
+        class_name="10A",
+        weekday=0,
+        start_time=time(8, 0),
+        end_time=time(9, 30),
+    )
+    db_session.add(entry)
+    db_session.commit()
+
+    # Try to add overlapping entry: Monday 09:00-10:00
+    resp = admin_client.post(
+        "/admin/schedule/add",
+        data={
+            "device_id": str(seed_device.id),
+            "teacher_id": str(seed_teacher.id),
+            "class_name": "10B",
+            "weekday": "0",
+            "start_time": "09:00",
+            "end_time": "10:00",
+        },
+    )
+    assert resp.status_code == 303
+    assert "error=" in resp.headers["location"]
+    assert "Zeitkonflikt" in resp.headers["location"].replace("+", " ")
+
+    # Verify no second entry was created
+    count = db_session.query(ScheduleEntry).count()
+    assert count == 1
 
 
 # ── ADMIN-10: Delete schedule entry ──────────────────────────────
 def test_delete_schedule_entry(admin_client, db_session, seed_device, seed_teacher, seed_school_class):
     """POST /admin/schedule/{id}/delete removes the entry (ADMIN-10)."""
-    pytest.skip("Plan 04 implements this")
+    from datetime import time
+    from app.models.schedule_entry import ScheduleEntry
+
+    entry = ScheduleEntry(
+        device_id=seed_device.id,
+        teacher_id=seed_teacher.id,
+        class_name="10A",
+        weekday=2,
+        start_time=time(14, 0),
+        end_time=time(15, 30),
+    )
+    db_session.add(entry)
+    db_session.commit()
+    db_session.refresh(entry)
+    entry_id = entry.id
+
+    resp = admin_client.post(f"/admin/schedule/{entry_id}/delete")
+    assert resp.status_code == 303
+    assert "msg=" in resp.headers["location"]
+
+    deleted = db_session.query(ScheduleEntry).filter(ScheduleEntry.id == entry_id).first()
+    assert deleted is None
+
+
+# ── D-17: Conflict check API ────────────────────────────────────
+def test_schedule_conflict_check_api(admin_client, db_session, seed_device, seed_teacher, seed_school_class):
+    """GET /admin/api/schedule/check-conflict returns conflict status (D-17)."""
+    from datetime import time
+    from app.models.schedule_entry import ScheduleEntry
+
+    entry = ScheduleEntry(
+        device_id=seed_device.id,
+        teacher_id=seed_teacher.id,
+        class_name="10A",
+        weekday=0,
+        start_time=time(8, 0),
+        end_time=time(9, 30),
+    )
+    db_session.add(entry)
+    db_session.commit()
+
+    # Conflicting query
+    resp = admin_client.get(
+        "/admin/api/schedule/check-conflict",
+        params={
+            "device_id": str(seed_device.id),
+            "weekday": "0",
+            "start_time": "08:30",
+            "end_time": "09:00",
+        },
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["conflict"] is True
+    assert "Zeitkonflikt" in data["message"]
+
+    # Non-conflicting query (different day)
+    resp = admin_client.get(
+        "/admin/api/schedule/check-conflict",
+        params={
+            "device_id": str(seed_device.id),
+            "weekday": "1",
+            "start_time": "08:30",
+            "end_time": "09:00",
+        },
+    )
+    data = resp.json()
+    assert data["conflict"] is False
+
+
+# ── ADMIN-09 edge case: adjacent entries ─────────────────────────
+def test_schedule_no_conflict_adjacent(admin_client, db_session, seed_device, seed_teacher, seed_school_class):
+    """Adjacent schedule entries (no overlap) are accepted (ADMIN-09 edge case)."""
+    from datetime import time
+    from app.models.schedule_entry import ScheduleEntry
+
+    # First entry: Monday 08:00-09:00
+    entry = ScheduleEntry(
+        device_id=seed_device.id,
+        teacher_id=seed_teacher.id,
+        class_name="10A",
+        weekday=0,
+        start_time=time(8, 0),
+        end_time=time(9, 0),
+    )
+    db_session.add(entry)
+    db_session.commit()
+
+    # Adjacent entry: Monday 09:00-10:00 (no overlap -- end_time == start_time is NOT overlap)
+    resp = admin_client.post(
+        "/admin/schedule/add",
+        data={
+            "device_id": str(seed_device.id),
+            "teacher_id": str(seed_teacher.id),
+            "class_name": "10B",
+            "weekday": "0",
+            "start_time": "09:00",
+            "end_time": "10:00",
+        },
+    )
+    assert resp.status_code == 303
+    assert "msg=" in resp.headers["location"]
+    assert db_session.query(ScheduleEntry).count() == 2
 
 
 # ── Skeleton tests (verify Plan 01 infrastructure) ───────────────
