@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-29T21:00:44.246Z"
+stopped_at: Completed 03-admin-interface-03-04-PLAN.md
+last_updated: "2026-03-29T22:12:51.353Z"
 progress:
   total_phases: 7
-  completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 3
+  total_plans: 10
+  completed_plans: 10
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device — the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 02 — authentication
+**Current focus:** Phase 03 — admin-interface
 
 ## Current Position
 
-Phase: 3
+Phase: 4
 Plan: Not started
 
 ## Performance Metrics
@@ -52,6 +52,10 @@ Plan: Not started
 | Phase 02-authentication P01 | 136s | 2 tasks | 3 files |
 | Phase 02-authentication P02 | 138 | 2 tasks | 4 files |
 | Phase 02-authentication P03 | 5min | 2 tasks | 7 files |
+| Phase 03-admin-interface P01 | 564s | 2 tasks | 11 files |
+| Phase 03-admin-interface P03 | 187 | 2 tasks | 4 files |
+| Phase 03-admin-interface P02 | 739s | 2 tasks | 12 files |
+| Phase 03-admin-interface P04 | 828 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -82,6 +86,14 @@ Recent decisions affecting current work:
 - [Phase 02-authentication]: Template dir at app/templates — Jinja2Templates instantiated in router
 - [Phase 02-authentication]: Admin seed placed in lifespan — idempotent, no-op if admin row exists
 - [Phase 02-authentication]: bcrypt pinned to 4.x — bcrypt 5.x breaks passlib 1.7.4
+- [Phase 03-admin-interface]: db_session.refresh() required after commit in test fixtures for SQLite in-memory session visibility
+- [Phase 03-admin-interface]: Admin templates use two-level inheritance: admin_base.html extends base.html with nav and flash messages
+- [Phase 03-admin-interface]: admin.js save-btn reads data-action from edit-form div for dynamic form URL
+- [Phase 03-admin-interface]: SchoolClass auto-created on user create/update when class_name not in DB (D-14)
+- [Phase 03-admin-interface]: div#edit-form with JS dynamic form submission avoids nested HTML forms for device table inline editing
+- [Phase 03-admin-interface]: db_session.refresh() required after commit in admin_client fixture for SQLAlchemy session sync
+- [Phase 03-admin-interface]: StaticPool required for in-memory SQLite test engine to prevent connection loss after commit in async handlers
+- [Phase 03-admin-interface]: Half-open interval overlap detection [start, end) for schedule entries -- adjacent entries allowed
 
 ### Pending Todos
 
@@ -93,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T21:00:44.242Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-admin-interface/03-CONTEXT.md
+Last session: 2026-03-29T22:08:33.581Z
+Stopped at: Completed 03-admin-interface-03-04-PLAN.md
+Resume file: None
