@@ -63,7 +63,12 @@ Plans:
   2. Admin can enable or disable a device, which controls whether the scheduler issues tokens for it
   3. Admin can create and deactivate users; deactivated users' attendance records are preserved
   4. Admin can add, view, and delete schedule entries; overlapping entries for the same device are rejected
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 03-01-PLAN.md — SchoolClass model, admin router skeleton, admin base template, test scaffold (10 stubs)
+- [ ] 03-02-PLAN.md — Device management page: table with inline editing, enable/disable toggle
+- [ ] 03-03-PLAN.md — User management page: table with create form, deactivate action
+- [ ] 03-04-PLAN.md — Schedule CRUD: per-device expandable sections, conflict detection, all 10 tests green
 **UI hint**: yes
 
 ### Phase 4: Teacher Interface
@@ -122,7 +127,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/3 | Complete    | 2026-03-27 |
 | 2. Authentication | 2/3 | In Progress|  |
-| 3. Admin Interface | 0/? | Not started | - |
+| 3. Admin Interface | 0/4 | Not started | - |
 | 4. Teacher Interface | 0/? | Not started | - |
 | 5. Student Check-in | 0/? | Not started | - |
 | 6. MQTT & Scheduler | 0/? | Not started | - |
