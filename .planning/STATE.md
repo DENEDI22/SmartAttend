@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-29T22:27:14.662Z"
+stopped_at: Completed 04-teacher-interface-04-02-PLAN.md
+last_updated: "2026-03-29T23:02:27.211Z"
 progress:
   total_phases: 7
-  completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  completed_phases: 4
+  total_plans: 12
+  completed_plans: 12
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device — the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 03 — admin-interface
+**Current focus:** Phase 04 — teacher-interface
 
 ## Current Position
 
-Phase: 4
+Phase: 5
 Plan: Not started
 
 ## Performance Metrics
@@ -56,6 +56,8 @@ Plan: Not started
 | Phase 03-admin-interface P03 | 187 | 2 tasks | 4 files |
 | Phase 03-admin-interface P02 | 739s | 2 tasks | 12 files |
 | Phase 03-admin-interface P04 | 828 | 2 tasks | 5 files |
+| Phase 04-teacher-interface P01 | 176s | 2 tasks | 6 files |
+| Phase 04-teacher-interface P02 | 169s | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -94,6 +96,11 @@ Recent decisions affecting current work:
 - [Phase 03-admin-interface]: db_session.refresh() required after commit in admin_client fixture for SQLAlchemy session sync
 - [Phase 03-admin-interface]: StaticPool required for in-memory SQLite test engine to prevent connection loss after commit in async handlers
 - [Phase 03-admin-interface]: Half-open interval overlap detection [start, end) for schedule entries -- adjacent entries allowed
+- [Phase 04-teacher-interface]: No Fach column in teacher dashboard -- ScheduleEntry has no subject field (D-07)
+- [Phase 04-teacher-interface]: Room displayed from Device.room via device_id FK join (ScheduleEntry has no room field)
+- [Phase 04-teacher-interface]: Teacher template pattern: teacher_base.html extends base.html with nav + flash messages
+- [Phase 04-teacher-interface]: Shared _build_roster helper extracts roster logic for HTML and CSV endpoints
+- [Phase 04-teacher-interface]: CSV uses semicolons, UTF-8 BOM, German filename Anwesenheit_{Klasse}_{YYYY-MM-DD}.csv
 
 ### Pending Todos
 
@@ -105,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T22:27:14.658Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-teacher-interface/04-CONTEXT.md
+Last session: 2026-03-29T22:58:04.074Z
+Stopped at: Completed 04-teacher-interface-04-02-PLAN.md
+Resume file: None
