@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block head_extra %}
+<script src="/static/admin.js" defer></script>
+{% endblock %}
+{% block content %}
+<nav>
+  <ul>
+    <li><strong>SmartAttend</strong></li>
+  </ul>
+  <ul>
+    <li><a href="/admin/devices" {% if active_page == 'devices' %}aria-current="page"{% endif %}>Geräte</a></li>
+    <li><a href="/admin/users" {% if active_page == 'users' %}aria-current="page"{% endif %}>Benutzer</a></li>
+    <li>
+      <form method="post" action="/auth/logout" style="margin: 0;">
+        <button type="submit" class="outline secondary" style="margin: 0; padding: 0.5rem 1rem;">Abmelden</button>
+      </form>
+    </li>
+  </ul>
+</nav>
+{% if request.query_params.get('msg') %}
+<p role="alert" style="color: #2e7d32">{{ request.query_params.get('msg') }}</p>
+{% endif %}
+{% if request.query_params.get('error') %}
+<p role="alert" style="color: var(--pico-del-color)">{{ request.query_params.get('error') }}</p>
+{% endif %}
+{% block admin_content %}{% endblock %}
+{% endblock %}

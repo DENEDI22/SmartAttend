@@ -61,3 +61,80 @@ def test_client(db_session):
     with TestClient(app, follow_redirects=False) as client:
         yield client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def admin_client(test_client, db_session):
+    """TestClient pre-authenticated as admin. Creates admin user and logs in."""
+    from app.services.auth import get_password_hash
+    from app.models.user import User
+
+    admin = User(
+        email="admin@test.com",
+        first_name="Admin",
+        last_name="Test",
+        role="admin",
+        password_hash=get_password_hash("adminpass"),
+        is_active=True,
+    )
+    db_session.add(admin)
+    db_session.commit()
+    db_session.refresh(admin)
+
+    resp = test_client.post(
+        "/auth/login",
+        data={"email": "admin@test.com", "password": "adminpass", "next": ""},
+    )
+    assert resp.status_code == 303
+    # Cookie is now set on test_client
+    return test_client
+
+
+@pytest.fixture
+def seed_device(db_session):
+    """Create a test device. Returns the Device object."""
+    from app.models.device import Device
+
+    device = Device(
+        device_id="test-device-001",
+        room="R101",
+        label="Raum 101",
+        is_enabled=False,
+        is_online=True,
+    )
+    db_session.add(device)
+    db_session.commit()
+    db_session.refresh(device)
+    return device
+
+
+@pytest.fixture
+def seed_teacher(db_session):
+    """Create a test teacher. Returns the User object."""
+    from app.services.auth import get_password_hash
+    from app.models.user import User
+
+    teacher = User(
+        email="teacher@test.com",
+        first_name="Lehrer",
+        last_name="Test",
+        role="teacher",
+        password_hash=get_password_hash("teacherpass"),
+        is_active=True,
+    )
+    db_session.add(teacher)
+    db_session.commit()
+    db_session.refresh(teacher)
+    return teacher
+
+
+@pytest.fixture
+def seed_school_class(db_session):
+    """Create a test SchoolClass. Returns the SchoolClass object."""
+    from app.models.school_class import SchoolClass
+
+    sc = SchoolClass(name="10A")
+    db_session.add(sc)
+    db_session.commit()
+    db_session.refresh(sc)
+    return sc
