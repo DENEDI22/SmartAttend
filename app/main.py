@@ -53,7 +53,9 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 from app.routers.auth import router as auth_router  # noqa: E402
+from app.routers.teacher import router as teacher_router  # noqa: E402
 app.include_router(auth_router)
+app.include_router(teacher_router)
 
 from app.routers.admin import router as admin_router  # noqa: E402
 app.include_router(admin_router)

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<nav>
+  <ul><li><strong>SmartAttend</strong></li></ul>
+  <ul>
+    <li><a href="/teacher" {% if active_page == 'overview' %}aria-current="page"{% endif %}>Uebersicht</a></li>
+    <li><form method="post" action="/auth/logout"><button class="outline secondary">Abmelden</button></form></li>
+  </ul>
+</nav>
+{% if request.query_params.get('msg') %}
+<p role="alert" style="color: #2e7d32">{{ request.query_params.get('msg') }}</p>
+{% endif %}
+{% if request.query_params.get('error') %}
+<p role="alert" style="color: var(--pico-del-color)">{{ request.query_params.get('error') }}</p>
+{% endif %}
+{% block teacher_content %}{% endblock %}
+{% endblock %}

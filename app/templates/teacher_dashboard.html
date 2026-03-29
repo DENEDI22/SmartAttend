@@ -1,0 +1,45 @@
+{% extends "teacher_base.html" %}
+{% block title %}Stundenplan heute -- SmartAttend{% endblock %}
+{% block teacher_content %}
+<hgroup>
+  <h1>Meine Stunden heute</h1>
+  <p>{{ weekday_name }}, {{ today_str }}</p>
+</hgroup>
+
+{% if lessons %}
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th>Klasse</th>
+        <th>Raum</th>
+        <th>Zeit</th>
+        <th>Anwesend</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lesson in lessons %}
+      <tr>
+        <td>{{ lesson.class_name }}</td>
+        <td>{{ lesson.room }}</td>
+        <td>{{ lesson.start_time }} -- {{ lesson.end_time }}</td>
+        {% if lesson.token_id is not none %}
+        <td>{{ lesson.checked_in }}/{{ lesson.expected }}</td>
+        <td><a href="/teacher/lesson/{{ lesson.token_id }}">Details</a></td>
+        {% else %}
+        <td>--</td>
+        <td></td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+{% else %}
+<article>
+  <h2>Heute keine Stunden geplant</h2>
+  <p>Fuer den heutigen Tag sind keine Unterrichtsstunden fuer Sie eingetragen.</p>
+</article>
+{% endif %}
+{% endblock %}
