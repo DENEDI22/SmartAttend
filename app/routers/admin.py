@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.dependencies import require_role
+from app.models.device import Device
 from app.models.user import User
 
 templates = Jinja2Templates(directory="app/templates")
@@ -24,12 +25,52 @@ async def devices_page(
     user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
-    """Device management page -- placeholder, completed in Plan 02."""
+    """Device management page with inline-editable table (ADMIN-01)."""
+    devices = db.query(Device).order_by(Device.device_id).all()
     return templates.TemplateResponse(
         request=request,
         name="admin_devices.html",
-        context={"user": user, "devices": [], "active_page": "devices"},
+        context={"user": user, "devices": devices, "active_page": "devices"},
     )
+
+
+@router.post("/devices/update")
+async def devices_update(
+    request: Request,
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Bulk save room/label from inline-edit form (ADMIN-02).
+
+    Form sends room_{device.id} and label_{device.id} for each device.
+    """
+    form = await request.form()
+    devices = db.query(Device).all()
+    for device in devices:
+        room_key = f"room_{device.id}"
+        label_key = f"label_{device.id}"
+        if room_key in form:
+            device.room = form[room_key] or None
+        if label_key in form:
+            device.label = form[label_key] or None
+    db.commit()
+    return RedirectResponse(url="/admin/devices?msg=Erfolgreich+aktualisiert.", status_code=303)
+
+
+@router.post("/devices/{device_id}/toggle")
+async def device_toggle(
+    device_id: int,
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Toggle is_enabled for a single device (ADMIN-03)."""
+    device = db.query(Device).filter(Device.id == device_id).first()
+    if not device:
+        return RedirectResponse(url="/admin/devices?error=Gerät+nicht+gefunden.", status_code=303)
+    device.is_enabled = not device.is_enabled
+    db.commit()
+    status = "aktiviert" if device.is_enabled else "deaktiviert"
+    return RedirectResponse(url=f"/admin/devices?msg=Gerät+{status}.", status_code=303)
 
 
 @router.get("/users")
