@@ -1,0 +1,39 @@
+{% extends "teacher_base.html" %}
+{% block title %}Anwesenheit {{ class_name }} -- SmartAttend{% endblock %}
+{% block teacher_content %}
+<a href="/teacher">&larr; Zurueck zur Uebersicht</a>
+
+<hgroup>
+  <h1>Anwesenheit {{ class_name }}</h1>
+  <p>{{ room }} -- {{ start_time }} bis {{ end_time }} -- Anwesend: {{ checked_in }}/{{ expected }}</p>
+</hgroup>
+
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th>Nachname</th>
+        <th>Vorname</th>
+        <th>Status</th>
+        <th>Uhrzeit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in roster %}
+      <tr>
+        <td>{{ row.last_name }}</td>
+        <td>{{ row.first_name }}</td>
+        {% if row.status == "Anwesend" %}
+        <td style="color: #2e7d32">{{ row.status }}</td>
+        {% else %}
+        <td style="color: var(--pico-muted-color)">{{ row.status }}</td>
+        {% endif %}
+        <td>{{ row.time or "--" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+
+<a href="/teacher/lesson/{{ token_id }}/csv" role="button" class="outline">CSV herunterladen</a>
+{% endblock %}

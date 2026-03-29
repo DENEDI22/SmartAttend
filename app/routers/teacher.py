@@ -1,7 +1,10 @@
 """Teacher router: dashboard, lesson detail, CSV export."""
+import csv
+import io
 from datetime import date
 
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -104,4 +107,141 @@ async def dashboard(
             "today_str": today_str,
             "active_page": "overview",
         },
+    )
+
+
+def _build_roster(db: Session, schedule_entry: ScheduleEntry, token: AttendanceToken | None):
+    """Build full class roster with present/absent status.
+
+    Returns (roster_list, checked_in_count, expected_count).
+    """
+    # All active students in this class, sorted by last name then first name
+    students = (
+        db.query(User)
+        .filter(
+            User.role == "student",
+            User.class_name == schedule_entry.class_name,
+            User.is_active == True,  # noqa: E712
+        )
+        .order_by(User.last_name, User.first_name)
+        .all()
+    )
+
+    # Build attendance lookup
+    records_by_student: dict[int, AttendanceRecord] = {}
+    if token is not None:
+        records = (
+            db.query(AttendanceRecord)
+            .filter(AttendanceRecord.token_id == token.id)
+            .all()
+        )
+        records_by_student = {r.student_id: r for r in records}
+
+    roster = []
+    checked_in = 0
+    for student in students:
+        record = records_by_student.get(student.id)
+        if record:
+            status = "Anwesend"
+            time_str = record.checked_in_at.strftime("%H:%M")
+            checked_in += 1
+        else:
+            status = "Abwesend"
+            time_str = ""
+        roster.append({
+            "last_name": student.last_name,
+            "first_name": student.first_name,
+            "status": status,
+            "time": time_str,
+        })
+
+    return roster, checked_in, len(students)
+
+
+@router.get("/lesson/{token_id}")
+async def lesson_detail(
+    request: Request,
+    token_id: int,
+    user: User = Depends(require_role("teacher")),
+    db: Session = Depends(get_db),
+):
+    """Lesson attendance roster (TEACH-03): full class with present/absent status."""
+    # Look up token
+    token = db.get(AttendanceToken, token_id)
+    if token is None:
+        return RedirectResponse(url="/teacher?error=Stunde+nicht+gefunden.", status_code=303)
+
+    # Look up schedule entry and verify ownership
+    schedule_entry = db.get(ScheduleEntry, token.schedule_entry_id)
+    if schedule_entry is None or schedule_entry.teacher_id != user.id:
+        return RedirectResponse(
+            url="/teacher?error=Sie+haben+keinen+Zugriff+auf+diese+Stunde.",
+            status_code=303,
+        )
+
+    # Get room from device
+    device = db.get(Device, schedule_entry.device_id)
+    room = device.room if device else "—"
+
+    roster, checked_in, expected = _build_roster(db, schedule_entry, token)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="teacher_lesson.html",
+        context={
+            "roster": roster,
+            "class_name": schedule_entry.class_name,
+            "room": room,
+            "start_time": schedule_entry.start_time.strftime("%H:%M"),
+            "end_time": schedule_entry.end_time.strftime("%H:%M"),
+            "checked_in": checked_in,
+            "expected": expected,
+            "token_id": token_id,
+            "active_page": "overview",
+        },
+    )
+
+
+@router.get("/lesson/{token_id}/csv")
+async def lesson_csv(
+    token_id: int,
+    user: User = Depends(require_role("teacher")),
+    db: Session = Depends(get_db),
+):
+    """CSV export of lesson attendance (TEACH-04): semicolons, UTF-8 BOM, German filename."""
+    # Look up token
+    token = db.get(AttendanceToken, token_id)
+    if token is None:
+        return RedirectResponse(url="/teacher?error=Stunde+nicht+gefunden.", status_code=303)
+
+    # Look up schedule entry and verify ownership
+    schedule_entry = db.get(ScheduleEntry, token.schedule_entry_id)
+    if schedule_entry is None or schedule_entry.teacher_id != user.id:
+        return RedirectResponse(
+            url="/teacher?error=Sie+haben+keinen+Zugriff+auf+diese+Stunde.",
+            status_code=303,
+        )
+
+    roster, _checked_in, _expected = _build_roster(db, schedule_entry, token)
+
+    # Build CSV with UTF-8 BOM and semicolon delimiter
+    output = io.StringIO()
+    output.write("\ufeff")  # UTF-8 BOM
+    writer = csv.writer(output, delimiter=";")
+    writer.writerow(["Nachname", "Vorname", "Klasse", "Status", "Uhrzeit"])
+    for row in roster:
+        writer.writerow([
+            row["last_name"],
+            row["first_name"],
+            schedule_entry.class_name,
+            row["status"],
+            row["time"],
+        ])
+
+    filename = f"Anwesenheit_{schedule_entry.class_name}_{token.lesson_date.strftime('%Y-%m-%d')}.csv"
+
+    return Response(
+        content=output.getvalue(),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
