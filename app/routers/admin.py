@@ -68,8 +68,9 @@ async def device_toggle(
     if not device:
         return RedirectResponse(url="/admin/devices?error=Gerät+nicht+gefunden.", status_code=303)
     device.is_enabled = not device.is_enabled
+    new_status = device.is_enabled
     db.commit()
-    status = "aktiviert" if device.is_enabled else "deaktiviert"
+    status = "aktiviert" if new_status else "deaktiviert"
     return RedirectResponse(url=f"/admin/devices?msg=Gerät+{status}.", status_code=303)
 
 
