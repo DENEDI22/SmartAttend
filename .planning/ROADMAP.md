@@ -79,7 +79,10 @@ Plans:
   1. Teacher dashboard shows today's lessons with checked-in count vs expected student count
   2. Teacher can view the full attendance list for any specific lesson
   3. Teacher can download attendance for a lesson as a CSV file
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 04-01-PLAN.md — Teacher router, dashboard with today's lessons and attendance counts, test scaffold
+- [ ] 04-02-PLAN.md — Lesson detail roster view and CSV export, all tests green
 **UI hint**: yes
 
 ### Phase 5: Student Check-in
@@ -128,7 +131,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 1. Foundation | 2/3 | Complete    | 2026-03-27 |
 | 2. Authentication | 2/3 | In Progress|  |
 | 3. Admin Interface | 1/4 | In Progress|  |
-| 4. Teacher Interface | 0/? | Not started | - |
+| 4. Teacher Interface | 0/2 | Not started | - |
 | 5. Student Check-in | 0/? | Not started | - |
 | 6. MQTT & Scheduler | 0/? | Not started | - |
 | 7. Dummy Clients | 0/? | Not started | - |
