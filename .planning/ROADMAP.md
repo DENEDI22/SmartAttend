@@ -95,7 +95,10 @@ Plans:
   3. Duplicate check-in by the same student for the same lesson is rejected
   4. An expired token shows a clear German-language error message ("Diese Stunde ist bereits beendet")
   5. An invalid or missing token shows an appropriate error instead of a server error
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 05-01-PLAN.md — Test scaffold, student_base.html template, checkin.html template, student_client fixture
+- [ ] 05-02-PLAN.md — Check-in router (GET + POST /checkin), main.py wiring, all 11 tests green
 **UI hint**: yes
 
 ### Phase 6: MQTT & Scheduler
@@ -124,7 +127,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -132,6 +135,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Authentication | 2/3 | In Progress|  |
 | 3. Admin Interface | 1/4 | In Progress|  |
 | 4. Teacher Interface | 1/2 | In Progress|  |
-| 5. Student Check-in | 0/? | Not started | - |
+| 5. Student Check-in | 0/2 | Not started | - |
 | 6. MQTT & Scheduler | 0/? | Not started | - |
 | 7. Dummy Clients | 0/? | Not started | - |
