@@ -111,7 +111,10 @@ Plans:
   3. The scheduler runs every minute and publishes a token URL to each active, enabled device with a current lesson; the URL follows the format `http://{SERVER_IP}/checkin?token={uuid}`
   4. When a new token is issued for a device, the previous token is deactivated
   5. Tokens expire at the lesson's `end_time`
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 06-01-PLAN.md — MQTT service: subscribe to topics, handle registration/heartbeat/lux, publish_token
+- [ ] 06-02-PLAN.md — Scheduler service: token issuance job, heartbeat monitor, lifespan wiring
 
 ### Phase 7: Dummy Clients
 **Goal**: Three Python containers faithfully simulate ESP32 MQTT clients so the full flow can be tested without hardware
@@ -136,5 +139,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. Admin Interface | 1/4 | In Progress|  |
 | 4. Teacher Interface | 1/2 | In Progress|  |
 | 5. Student Check-in | 0/2 | Not started | - |
-| 6. MQTT & Scheduler | 0/? | Not started | - |
+| 6. MQTT & Scheduler | 0/2 | Not started | - |
 | 7. Dummy Clients | 0/? | Not started | - |
