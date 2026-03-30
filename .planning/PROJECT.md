@@ -19,9 +19,9 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 - [x] Teacher interface: attendance dashboard, attendance list per lesson, CSV export — Validated in Phase 4: Teacher Interface
 
 - [x] Student check-in: NFC tap → browser → login → attendance record written — Validated in Phase 5: Student Check-in
+- [x] MQTT + Scheduler: token lifecycle end-to-end, dummy clients receive URLs — Validated in Phase 6: MQTT & Scheduler
 
 ### Active
-- [ ] MQTT + Scheduler: token lifecycle end-to-end, dummy clients receive URLs
 - [ ] Dummy clients: 3 Python processes simulate ESP32 devices via MQTT
 
 ### Out of Scope
@@ -77,4 +77,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 — Phase 5 (Student Check-in) complete*
+*Last updated: 2026-03-30 — Phase 6 (MQTT & Scheduler) complete*
