@@ -97,7 +97,7 @@ Plans:
   5. An invalid or missing token shows an appropriate error instead of a server error
 **Plans**: 2 plans
 Plans:
-- [ ] 05-01-PLAN.md — Test scaffold, student_base.html template, checkin.html template, student_client fixture
+- [x] 05-01-PLAN.md — Test scaffold, student_base.html template, checkin.html template, student_client fixture
 - [ ] 05-02-PLAN.md — Check-in router (GET + POST /checkin), main.py wiring, all 11 tests green
 **UI hint**: yes
 

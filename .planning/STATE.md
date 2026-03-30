@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-29T23:47:54.148Z"
+stopped_at: Completed 05-student-check-in-05-02-PLAN.md
+last_updated: "2026-03-30T00:43:18.496Z"
 progress:
   total_phases: 7
-  completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
+  completed_phases: 5
+  total_plans: 14
+  completed_plans: 14
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device — the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 04 — teacher-interface
+**Current focus:** Phase 05 — student-check-in
 
 ## Current Position
 
-Phase: 5
+Phase: 6
 Plan: Not started
 
 ## Performance Metrics
@@ -58,6 +58,8 @@ Plan: Not started
 | Phase 03-admin-interface P04 | 828 | 2 tasks | 5 files |
 | Phase 04-teacher-interface P01 | 176s | 2 tasks | 6 files |
 | Phase 04-teacher-interface P02 | 169s | 2 tasks | 3 files |
+| Phase 05-student-check-in P01 | 190 | 2 tasks | 5 files |
+| Phase 05-student-check-in P02 | 163s | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -101,6 +103,10 @@ Recent decisions affecting current work:
 - [Phase 04-teacher-interface]: Teacher template pattern: teacher_base.html extends base.html with nav + flash messages
 - [Phase 04-teacher-interface]: Shared _build_roster helper extracts roster logic for HTML and CSV endpoints
 - [Phase 04-teacher-interface]: CSV uses semicolons, UTF-8 BOM, German filename Anwesenheit_{Klasse}_{YYYY-MM-DD}.csv
+- [Phase 05-student-check-in]: student_base.html follows teacher_base.html pattern without flash messages
+- [Phase 05-student-check-in]: checkin.html uses 4-state conditional rendering (error, already-checked-in, success, form)
+- [Phase 05-student-check-in]: Manual auth check on GET /checkin to preserve token param in login redirect
+- [Phase 05-student-check-in]: IntegrityError catch as safety net for concurrent duplicate check-ins
 
 ### Pending Todos
 
@@ -112,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T23:47:54.144Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-student-check-in/05-CONTEXT.md
+Last session: 2026-03-30T00:37:24.711Z
+Stopped at: Completed 05-student-check-in-05-02-PLAN.md
+Resume file: None
