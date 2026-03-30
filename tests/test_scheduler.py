@@ -12,11 +12,24 @@ from app.models.attendance_token import AttendanceToken
 from app.models.user import User
 
 
+class _NonClosingSession:
+    """Wraps a real session but makes close() a no-op so tests can still inspect objects."""
+
+    def __init__(self, real):
+        self._real = real
+
+    def close(self):
+        pass  # no-op: keep session open for test assertions
+
+    def __getattr__(self, name):
+        return getattr(self._real, name)
+
+
 @pytest.fixture
 def mock_session_local(db_session):
     """Replace SessionLocal in scheduler module with factory returning the test session."""
     def _factory():
-        return db_session
+        return _NonClosingSession(db_session)
     return _factory
 
 
