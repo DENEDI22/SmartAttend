@@ -59,3 +59,6 @@ app.include_router(teacher_router)
 
 from app.routers.admin import router as admin_router  # noqa: E402
 app.include_router(admin_router)
+
+from app.routers.checkin import router as checkin_router  # noqa: E402
+app.include_router(checkin_router)
