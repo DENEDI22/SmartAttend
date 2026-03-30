@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.database import engine, Base, SessionLocal
 from app.models.user import User
 from app.services.auth import get_password_hash
+from app.services.mqtt import start_mqtt, stop_mqtt
+from app.services.scheduler import start_scheduler, stop_scheduler
 from app.config import get_settings
 import app.models  # noqa: F401 — registers all model classes on Base metadata
 
@@ -33,14 +35,19 @@ async def _seed_admin(db: Session) -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Create database tables and seed admin account on startup."""
+    """Create database tables, seed admin, start MQTT and scheduler on startup."""
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
         await _seed_admin(db)
     finally:
         db.close()
+
+    start_mqtt()
+    start_scheduler()
     yield
+    stop_scheduler()
+    stop_mqtt()
 
 
 app = FastAPI(

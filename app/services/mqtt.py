@@ -115,9 +115,13 @@ def start_mqtt():
     _client.on_connect = _on_connect
     _client.on_message = _on_message
     _client.reconnect_delay_set(min_delay=1, max_delay=30)
-    _client.connect(settings.mqtt_broker, settings.mqtt_port, keepalive=60)
-    _client.loop_start()
-    logger.info("MQTT client started, connecting to %s:%d", settings.mqtt_broker, settings.mqtt_port)
+    try:
+        _client.connect(settings.mqtt_broker, settings.mqtt_port, keepalive=60)
+        _client.loop_start()
+        logger.info("MQTT client started, connecting to %s:%d", settings.mqtt_broker, settings.mqtt_port)
+    except (ConnectionRefusedError, OSError) as e:
+        logger.warning("MQTT broker not available at %s:%s — will retry: %s",
+                       settings.mqtt_broker, settings.mqtt_port, e)
 
 
 def stop_mqtt():
