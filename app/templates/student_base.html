@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<nav>
+  <ul><li><strong>SmartAttend</strong></li></ul>
+  <ul>
+    <li><form method="post" action="/auth/logout"><button class="outline secondary">Abmelden</button></form></li>
+  </ul>
+</nav>
+{% block student_content %}{% endblock %}
+{% endblock %}
