@@ -125,7 +125,10 @@ Plans:
   2. Each dummy client publishes a lux sensor reading every 60 seconds with a configurable value
   3. When the server publishes a token URL, the dummy client prints it to its container log
   4. Three separate client containers (client-e101, client-e102, client-e103) start cleanly from `docker compose up`, each fully configured via environment variables
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 07-01-PLAN.md — Test scaffold + full dummy MQTT client implementation (main.py)
+- [ ] 07-02-PLAN.md — Dockerfile update, requirements.txt, Docker Compose verification
 
 ## Progress
 
@@ -140,4 +143,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. Teacher Interface | 1/2 | In Progress|  |
 | 5. Student Check-in | 0/2 | Not started | - |
 | 6. MQTT & Scheduler | 0/2 | Not started | - |
-| 7. Dummy Clients | 0/? | Not started | - |
+| 7. Dummy Clients | 0/2 | Not started | - |
