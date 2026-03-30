@@ -8,11 +8,25 @@ import pytest
 from app.models.device import Device
 
 
+class _NonClosingSession:
+    """Wraps a real session but makes close() a no-op so the test can still inspect objects."""
+
+    def __init__(self, real):
+        self._real = real
+
+    def close(self):
+        # no-op: keep session open for test assertions
+        pass
+
+    def __getattr__(self, name):
+        return getattr(self._real, name)
+
+
 @pytest.fixture
 def mock_session_local(db_session):
-    """Make mqtt handlers use the test DB session."""
+    """Make mqtt handlers use the test DB session (with no-op close)."""
     def _factory():
-        return db_session
+        return _NonClosingSession(db_session)
     return _factory
 
 
