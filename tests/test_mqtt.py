@@ -90,11 +90,17 @@ def test_heartbeat_update(db_session, patch_session):
     assert device.last_seen is not None
 
 
-def test_heartbeat_unknown_device(db_session, patch_session):
-    """Heartbeat for unknown device should not raise."""
+def test_heartbeat_unknown_device_auto_registers(db_session, patch_session):
+    """Heartbeat for unknown device should auto-create it (startup race fix)."""
     from app.services.mqtt import _handle_heartbeat
 
     _handle_heartbeat("unknown_device", "online")
+
+    device = db_session.query(Device).filter_by(device_id="unknown_device").first()
+    assert device is not None
+    assert device.is_enabled is False
+    assert device.is_online is True
+    assert device.last_seen is not None
 
 
 def test_lux_update(db_session, patch_session):

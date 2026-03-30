@@ -1,6 +1,9 @@
+import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
 from sqlalchemy.orm import Session
 from app.database import engine, Base, SessionLocal
 from app.models.user import User

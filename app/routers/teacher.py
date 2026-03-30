@@ -74,15 +74,27 @@ async def dashboard(
             .count()
         )
 
-        # Count checked-in students
+        # Count checked-in students (across ALL tokens for this entry + date,
+        # since scheduler rotates tokens every minute)
         checked_in = 0
         token_id = None
         if token is not None:
-            checked_in = (
-                db.query(AttendanceRecord)
-                .filter(AttendanceRecord.token_id == token.id)
-                .count()
+            all_token_ids = (
+                db.query(AttendanceToken.id)
+                .filter(
+                    AttendanceToken.schedule_entry_id == entry.id,
+                    AttendanceToken.lesson_date == today,
+                )
+                .all()
             )
+            t_ids = [t[0] for t in all_token_ids]
+            if t_ids:
+                checked_in = (
+                    db.query(AttendanceRecord.student_id)
+                    .filter(AttendanceRecord.token_id.in_(t_ids))
+                    .distinct()
+                    .count()
+                )
             token_id = token.id
 
         lessons.append({
@@ -113,6 +125,10 @@ async def dashboard(
 def _build_roster(db: Session, schedule_entry: ScheduleEntry, token: AttendanceToken | None):
     """Build full class roster with present/absent status.
 
+    Queries attendance records across ALL tokens for this schedule entry + date,
+    not just the current active token. This is necessary because the scheduler
+    rotates tokens every minute, so students may have checked in with an earlier token.
+
     Returns (roster_list, checked_in_count, expected_count).
     """
     # All active students in this class, sorted by last name then first name
@@ -127,15 +143,28 @@ def _build_roster(db: Session, schedule_entry: ScheduleEntry, token: AttendanceT
         .all()
     )
 
-    # Build attendance lookup
+    # Build attendance lookup across ALL tokens for this schedule entry + date
     records_by_student: dict[int, AttendanceRecord] = {}
     if token is not None:
-        records = (
-            db.query(AttendanceRecord)
-            .filter(AttendanceRecord.token_id == token.id)
+        all_token_ids = (
+            db.query(AttendanceToken.id)
+            .filter(
+                AttendanceToken.schedule_entry_id == schedule_entry.id,
+                AttendanceToken.lesson_date == token.lesson_date,
+            )
             .all()
         )
-        records_by_student = {r.student_id: r for r in records}
+        token_ids = [t[0] for t in all_token_ids]
+        if token_ids:
+            records = (
+                db.query(AttendanceRecord)
+                .filter(AttendanceRecord.token_id.in_(token_ids))
+                .all()
+            )
+            # Keep the earliest record per student (first check-in)
+            for r in records:
+                if r.student_id not in records_by_student:
+                    records_by_student[r.student_id] = r
 
     roster = []
     checked_in = 0

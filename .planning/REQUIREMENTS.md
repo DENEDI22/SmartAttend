@@ -28,53 +28,53 @@
 
 ### Admin
 
-- [ ] **ADMIN-01**: Admin can view all registered devices with status (online/offline, enabled/disabled, last seen, last lux)
-- [ ] **ADMIN-02**: Admin can assign a device to a room and give it a label
-- [ ] **ADMIN-03**: Admin can enable/disable a device (controls token issuance)
-- [ ] **ADMIN-04**: Admin can view all users (name, role, class)
-- [ ] **ADMIN-05**: Admin can create a new user (name, username, password, role, class)
-- [ ] **ADMIN-06**: Admin can deactivate a user (soft delete — records preserved)
-- [ ] **ADMIN-07**: Admin can view the full timetable across all devices
-- [ ] **ADMIN-08**: Admin can add a schedule entry (device, teacher, class, subject, weekday, start/end time)
-- [ ] **ADMIN-09**: Admin cannot add a conflicting schedule entry (same device + overlapping time = rejected)
-- [ ] **ADMIN-10**: Admin can delete a schedule entry
+- [x] **ADMIN-01**: Admin can view all registered devices with status (online/offline, enabled/disabled, last seen, last lux)
+- [x] **ADMIN-02**: Admin can assign a device to a room and give it a label
+- [x] **ADMIN-03**: Admin can enable/disable a device (controls token issuance)
+- [x] **ADMIN-04**: Admin can view all users (name, role, class)
+- [x] **ADMIN-05**: Admin can create a new user (name, username, password, role, class)
+- [x] **ADMIN-06**: Admin can deactivate a user (soft delete — records preserved)
+- [x] **ADMIN-07**: Admin can view the full timetable across all devices
+- [x] **ADMIN-08**: Admin can add a schedule entry (device, teacher, class, subject, weekday, start/end time)
+- [x] **ADMIN-09**: Admin cannot add a conflicting schedule entry (same device + overlapping time = rejected)
+- [x] **ADMIN-10**: Admin can delete a schedule entry
 
 ### Teacher
 
-- [ ] **TEACH-01**: Teacher can view today's lessons on their dashboard
-- [ ] **TEACH-02**: Each lesson on the dashboard shows checked-in count vs expected student count
-- [ ] **TEACH-03**: Teacher can view the full attendance list for a specific lesson
-- [ ] **TEACH-04**: Teacher can export attendance for a lesson as CSV
+- [x] **TEACH-01**: Teacher can view today's lessons on their dashboard
+- [x] **TEACH-02**: Each lesson on the dashboard shows checked-in count vs expected student count
+- [x] **TEACH-03**: Teacher can view the full attendance list for a specific lesson
+- [x] **TEACH-04**: Teacher can export attendance for a lesson as CSV
 
 ### Student Check-in
 
-- [ ] **CHKIN-01**: GET `/checkin?token=<uuid>` renders a page showing lesson info (subject, teacher, room)
-- [ ] **CHKIN-02**: Page shows a login form (or uses existing session cookie)
-- [ ] **CHKIN-03**: POST `/checkin` validates token: exists, active, not expired
-- [ ] **CHKIN-04**: POST `/checkin` rejects duplicate check-in for same student + lesson
-- [ ] **CHKIN-05**: POST `/checkin` writes an AttendanceRecord on success and shows confirmation
-- [ ] **CHKIN-06**: Expired token shows clear error message ("Diese Stunde ist bereits beendet")
-- [ ] **CHKIN-07**: Invalid token shows appropriate error
+- [x] **CHKIN-01**: GET `/checkin?token=<uuid>` renders a page showing lesson info (subject, teacher, room)
+- [x] **CHKIN-02**: Page shows a login form (or uses existing session cookie)
+- [x] **CHKIN-03**: POST `/checkin` validates token: exists, active, not expired
+- [x] **CHKIN-04**: POST `/checkin` rejects duplicate check-in for same student + lesson
+- [x] **CHKIN-05**: POST `/checkin` writes an AttendanceRecord on success and shows confirmation
+- [x] **CHKIN-06**: Expired token shows clear error message ("Diese Stunde ist bereits beendet")
+- [x] **CHKIN-07**: Invalid token shows appropriate error
 
 ### MQTT & Scheduler
 
-- [ ] **MQTT-01**: Server subscribes to `devices/register`, `devices/+/status`, `sensors/+/lux`
-- [ ] **MQTT-02**: Registration message auto-creates device record with `is_enabled=False`
-- [ ] **MQTT-03**: Heartbeat message updates `is_online` and `last_seen` for the device
-- [ ] **MQTT-04**: Sensor message updates `last_lux` for the device
-- [ ] **MQTT-05**: `publish_token(device_id, url)` publishes to `attendance/device/{device_id}`
-- [ ] **MQTT-06**: Scheduler runs every minute and issues tokens for active, enabled schedule entries
-- [ ] **MQTT-07**: When a new token is issued for a device, previous active token is deactivated
-- [ ] **MQTT-08**: Token URL format: `http://{SERVER_IP}/checkin?token={uuid}`
-- [ ] **MQTT-09**: Token expires at the lesson's `end_time`
+- [x] **MQTT-01**: Server subscribes to `devices/register`, `devices/+/status`, `sensors/+/lux`
+- [x] **MQTT-02**: Registration message auto-creates device record with `is_enabled=False`
+- [x] **MQTT-03**: Heartbeat message updates `is_online` and `last_seen` for the device
+- [x] **MQTT-04**: Sensor message updates `last_lux` for the device
+- [x] **MQTT-05**: `publish_token(device_id, url)` publishes to `attendance/device/{device_id}`
+- [x] **MQTT-06**: Scheduler runs every minute and issues tokens for active, enabled schedule entries
+- [x] **MQTT-07**: When a new token is issued for a device, previous active token is deactivated
+- [x] **MQTT-08**: Token URL format: `http://{SERVER_IP}/checkin?token={uuid}`
+- [x] **MQTT-09**: Token expires at the lesson's `end_time`
 
 ### Dummy Clients
 
-- [ ] **DUMMY-01**: Dummy client publishes `devices/register` on startup
-- [ ] **DUMMY-02**: Dummy client publishes `devices/{id}/status` heartbeat every 30 seconds
-- [ ] **DUMMY-03**: Dummy client publishes `sensors/{id}/lux` every 60 seconds with configurable lux value
-- [ ] **DUMMY-04**: Dummy client subscribes to `attendance/device/{id}` and prints received URL to console
-- [ ] **DUMMY-05**: Each dummy client is fully configured via environment variables (DEVICE_ID, ROOM, MQTT_BROKER, MQTT_PORT, LUX_VALUE)
+- [x] **DUMMY-01**: Dummy client publishes `devices/register` on startup
+- [x] **DUMMY-02**: Dummy client publishes `devices/{id}/status` heartbeat every 30 seconds
+- [x] **DUMMY-03**: Dummy client publishes `sensors/{id}/lux` every 60 seconds with configurable lux value
+- [x] **DUMMY-04**: Dummy client subscribes to `attendance/device/{id}` and prints received URL to console
+- [x] **DUMMY-05**: Each dummy client is fully configured via environment variables (DEVICE_ID, ROOM, MQTT_BROKER, MQTT_PORT, LUX_VALUE)
 - [ ] **DUMMY-06**: `dummy_client/Dockerfile` exists and is included in `docker-compose.yml`
 - [ ] **DUMMY-07**: Three dummy client instances run as separate containers (client-e101, client-e102, client-e103)
 
@@ -128,41 +128,41 @@
 | AUTH-05 | Phase 2 | Complete |
 | AUTH-06 | Phase 2 | Complete |
 | AUTH-07 | Phase 2 | Complete |
-| ADMIN-01 | Phase 3 | Pending |
-| ADMIN-02 | Phase 3 | Pending |
-| ADMIN-03 | Phase 3 | Pending |
-| ADMIN-04 | Phase 3 | Pending |
-| ADMIN-05 | Phase 3 | Pending |
-| ADMIN-06 | Phase 3 | Pending |
-| ADMIN-07 | Phase 3 | Pending |
-| ADMIN-08 | Phase 3 | Pending |
-| ADMIN-09 | Phase 3 | Pending |
-| ADMIN-10 | Phase 3 | Pending |
-| TEACH-01 | Phase 4 | Pending |
-| TEACH-02 | Phase 4 | Pending |
-| TEACH-03 | Phase 4 | Pending |
-| TEACH-04 | Phase 4 | Pending |
-| CHKIN-01 | Phase 5 | Pending |
-| CHKIN-02 | Phase 5 | Pending |
-| CHKIN-03 | Phase 5 | Pending |
-| CHKIN-04 | Phase 5 | Pending |
-| CHKIN-05 | Phase 5 | Pending |
-| CHKIN-06 | Phase 5 | Pending |
-| CHKIN-07 | Phase 5 | Pending |
-| MQTT-01 | Phase 6 | Pending |
-| MQTT-02 | Phase 6 | Pending |
-| MQTT-03 | Phase 6 | Pending |
-| MQTT-04 | Phase 6 | Pending |
-| MQTT-05 | Phase 6 | Pending |
-| MQTT-06 | Phase 6 | Pending |
-| MQTT-07 | Phase 6 | Pending |
-| MQTT-08 | Phase 6 | Pending |
-| MQTT-09 | Phase 6 | Pending |
-| DUMMY-01 | Phase 7 | Pending |
-| DUMMY-02 | Phase 7 | Pending |
-| DUMMY-03 | Phase 7 | Pending |
-| DUMMY-04 | Phase 7 | Pending |
-| DUMMY-05 | Phase 7 | Pending |
+| ADMIN-01 | Phase 3 | Complete |
+| ADMIN-02 | Phase 3 | Complete |
+| ADMIN-03 | Phase 3 | Complete |
+| ADMIN-04 | Phase 3 | Complete |
+| ADMIN-05 | Phase 3 | Complete |
+| ADMIN-06 | Phase 3 | Complete |
+| ADMIN-07 | Phase 3 | Complete |
+| ADMIN-08 | Phase 3 | Complete |
+| ADMIN-09 | Phase 3 | Complete |
+| ADMIN-10 | Phase 3 | Complete |
+| TEACH-01 | Phase 4 | Complete |
+| TEACH-02 | Phase 4 | Complete |
+| TEACH-03 | Phase 4 | Complete |
+| TEACH-04 | Phase 4 | Complete |
+| CHKIN-01 | Phase 5 | Complete |
+| CHKIN-02 | Phase 5 | Complete |
+| CHKIN-03 | Phase 5 | Complete |
+| CHKIN-04 | Phase 5 | Complete |
+| CHKIN-05 | Phase 5 | Complete |
+| CHKIN-06 | Phase 5 | Complete |
+| CHKIN-07 | Phase 5 | Complete |
+| MQTT-01 | Phase 6 | Complete |
+| MQTT-02 | Phase 6 | Complete |
+| MQTT-03 | Phase 6 | Complete |
+| MQTT-04 | Phase 6 | Complete |
+| MQTT-05 | Phase 6 | Complete |
+| MQTT-06 | Phase 6 | Complete |
+| MQTT-07 | Phase 6 | Complete |
+| MQTT-08 | Phase 6 | Complete |
+| MQTT-09 | Phase 6 | Complete |
+| DUMMY-01 | Phase 7 | Complete |
+| DUMMY-02 | Phase 7 | Complete |
+| DUMMY-03 | Phase 7 | Complete |
+| DUMMY-04 | Phase 7 | Complete |
+| DUMMY-05 | Phase 7 | Complete |
 | DUMMY-06 | Phase 7 | Pending |
 | DUMMY-07 | Phase 7 | Pending |
 

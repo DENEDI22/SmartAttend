@@ -71,11 +71,19 @@ def _handle_register(payload: str):
 
 
 def _handle_heartbeat(device_id: str, payload: str):
-    """Update device online status and last_seen timestamp."""
+    """Update device online status and last_seen timestamp.
+
+    Auto-creates the device if it doesn't exist yet (handles the case where
+    the client started before the server and the registration message was missed).
+    """
     db = SessionLocal()
     try:
         device = db.query(Device).filter_by(device_id=device_id).first()
         if not device:
+            device = Device(device_id=device_id, is_enabled=False, is_online=True, last_seen=datetime.now())
+            db.add(device)
+            db.commit()
+            logger.info("Auto-registered device from heartbeat: %s", device_id)
             return
         device.is_online = True
         device.last_seen = datetime.now()
