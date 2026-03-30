@@ -234,3 +234,14 @@ def seed_attendance(db_session, seed_token, seed_students):
     for r in records:
         db_session.refresh(r)
     return records
+
+
+@pytest.fixture
+def student_client(test_client, seed_students):
+    """Authenticated TestClient as first seed student."""
+    resp = test_client.post(
+        "/auth/login",
+        data={"email": "student1@test.com", "password": "studentpass", "next": ""},
+    )
+    assert resp.status_code == 303
+    return test_client

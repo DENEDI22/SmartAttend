@@ -1,0 +1,26 @@
+{% extends "student_base.html" %}
+{% block title %}Anwesenheit -- SmartAttend{% endblock %}
+{% block student_content %}
+<article style="max-width: 480px; margin: 2rem auto;">
+  {% if error %}
+  <p role="alert" style="color: var(--pico-del-color)">{{ error }}</p>
+  {% elif already_checked_in %}
+  <hgroup>
+    <h2>Anwesenheit erfassen</h2>
+    <p>{{ room }} &mdash; {{ start_time }}&ndash;{{ end_time }}</p>
+  </hgroup>
+  <p style="color: #2e7d32">Eingecheckt um {{ checked_in_time }}</p>
+  {% elif success %}
+  <p style="color: #2e7d32">Anwesenheit erfolgreich erfasst.</p>
+  {% else %}
+  <hgroup>
+    <h2>Anwesenheit erfassen</h2>
+    <p>{{ room }} &mdash; {{ start_time }}&ndash;{{ end_time }}</p>
+  </hgroup>
+  <form method="post" action="/checkin">
+    <input type="hidden" name="token" value="{{ token }}">
+    <button type="submit">Anwesenheit best&auml;tigen</button>
+  </form>
+  {% endif %}
+</article>
+{% endblock %}
