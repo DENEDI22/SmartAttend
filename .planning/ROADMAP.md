@@ -113,7 +113,7 @@ Plans:
   5. Tokens expire at the lesson's `end_time`
 **Plans**: 2 plans
 Plans:
-- [ ] 06-01-PLAN.md — MQTT service: subscribe to topics, handle registration/heartbeat/lux, publish_token
+- [x] 06-01-PLAN.md — MQTT service: subscribe to topics, handle registration/heartbeat/lux, publish_token
 - [ ] 06-02-PLAN.md — Scheduler service: token issuance job, heartbeat monitor, lifespan wiring
 
 ### Phase 7: Dummy Clients

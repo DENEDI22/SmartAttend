@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Phase 6 context gathered
-last_updated: "2026-03-30T08:07:00.119Z"
+stopped_at: Completed 06-mqtt-scheduler-06-02-PLAN.md
+last_updated: "2026-03-30T08:37:56.689Z"
 progress:
   total_phases: 7
-  completed_phases: 5
-  total_plans: 14
-  completed_plans: 14
+  completed_phases: 6
+  total_plans: 16
+  completed_plans: 16
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device — the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 05 — student-check-in
+**Current focus:** Phase 06 — mqtt-scheduler
 
 ## Current Position
 
-Phase: 6
+Phase: 7
 Plan: Not started
 
 ## Performance Metrics
@@ -60,6 +60,8 @@ Plan: Not started
 | Phase 04-teacher-interface P02 | 169s | 2 tasks | 3 files |
 | Phase 05-student-check-in P01 | 190 | 2 tasks | 5 files |
 | Phase 05-student-check-in P02 | 163s | 2 tasks | 3 files |
+| Phase 06-mqtt-scheduler P01 | 161s | 1 tasks | 2 files |
+| Phase 06-mqtt-scheduler P02 | 176 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -107,6 +109,11 @@ Recent decisions affecting current work:
 - [Phase 05-student-check-in]: checkin.html uses 4-state conditional rendering (error, already-checked-in, success, form)
 - [Phase 05-student-check-in]: Manual auth check on GET /checkin to preserve token param in login redirect
 - [Phase 05-student-check-in]: IntegrityError catch as safety net for concurrent duplicate check-ins
+- [Phase 06-mqtt-scheduler]: NonClosingSession wrapper pattern for MQTT handler tests — prevents db.close() from detaching objects during assertions
+- [Phase 06-mqtt-scheduler]: Per-callback SessionLocal pattern: each MQTT handler creates own session for thread safety
+- [Phase 06-mqtt-scheduler]: NonClosingSession pattern reused for scheduler test DB isolation
+- [Phase 06-mqtt-scheduler]: mqtt.py connect wrapped in try/except for graceful broker unavailability
+- [Phase 06-mqtt-scheduler]: Lifespan ordering: MQTT starts before scheduler, scheduler stops before MQTT
 
 ### Pending Todos
 
@@ -118,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T08:07:00.112Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-mqtt-scheduler/06-CONTEXT.md
+Last session: 2026-03-30T08:30:28.538Z
+Stopped at: Completed 06-mqtt-scheduler-06-02-PLAN.md
+Resume file: None
