@@ -20,9 +20,12 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 - [x] Student check-in: NFC tap → browser → login → attendance record written — Validated in Phase 5: Student Check-in
 - [x] MQTT + Scheduler: token lifecycle end-to-end, dummy clients receive URLs — Validated in Phase 6: MQTT & Scheduler
+- [x] Dummy clients: 3 Python containers simulate ESP32 devices via MQTT — Validated in Phase 7: Dummy Clients
 
 ### Active
-- [ ] Dummy clients: 3 Python processes simulate ESP32 devices via MQTT
+
+(None — all v1.0 requirements validated)
+
 
 ### Out of Scope
 
@@ -77,4 +80,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 — Phase 6 (MQTT & Scheduler) complete*
+*Last updated: 2026-03-31 — Phase 7 (Dummy Clients) complete — all v1.0 phases done*
