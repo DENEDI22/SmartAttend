@@ -127,7 +127,7 @@ Plans:
   4. Three separate client containers (client-e101, client-e102, client-e103) start cleanly from `docker compose up`, each fully configured via environment variables
 **Plans**: 2 plans
 Plans:
-- [ ] 07-01-PLAN.md — Test scaffold + full dummy MQTT client implementation (main.py)
+- [x] 07-01-PLAN.md — Test scaffold + full dummy MQTT client implementation (main.py)
 - [ ] 07-02-PLAN.md — Dockerfile update, requirements.txt, Docker Compose verification
 
 ## Progress
