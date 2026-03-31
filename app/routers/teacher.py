@@ -91,7 +91,11 @@ async def dashboard(
             if t_ids:
                 checked_in = (
                     db.query(AttendanceRecord.student_id)
-                    .filter(AttendanceRecord.token_id.in_(t_ids))
+                    .join(User, AttendanceRecord.student_id == User.id)
+                    .filter(
+                        AttendanceRecord.token_id.in_(t_ids),
+                        User.class_name == entry.class_name,
+                    )
                     .distinct()
                     .count()
                 )
@@ -256,7 +260,7 @@ async def lesson_csv(
     # Build CSV with UTF-8 BOM and semicolon delimiter
     output = io.StringIO()
     output.write("\ufeff")  # UTF-8 BOM
-    writer = csv.writer(output, delimiter=";")
+    writer = csv.writer(output)
     writer.writerow(["Nachname", "Vorname", "Klasse", "Status", "Uhrzeit"])
     for row in roster:
         writer.writerow([

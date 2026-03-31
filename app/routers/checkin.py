@@ -94,14 +94,29 @@ async def checkin_page(
             context={"error": error},
         )
 
-    # Check for existing record (duplicate)
+    # Verify student is enrolled in the class this token belongs to
+    entry = db.get(ScheduleEntry, db_token.schedule_entry_id)
+    device = db.get(Device, db_token.device_id)
+    if entry and user.class_name != entry.class_name:
+        return templates.TemplateResponse(
+            request=request,
+            name="checkin.html",
+            context={"error": "Sie gehören nicht zu dieser Klasse."},
+        )
+
+    # Check for existing record across ALL tokens for this lesson + date
+    # (tokens rotate every minute, so student may have used an earlier one)
+    all_token_ids = [
+        t[0] for t in db.query(AttendanceToken.id).filter(
+            AttendanceToken.schedule_entry_id == db_token.schedule_entry_id,
+            AttendanceToken.lesson_date == db_token.lesson_date,
+        ).all()
+    ]
     existing = db.query(AttendanceRecord).filter(
         AttendanceRecord.student_id == user.id,
-        AttendanceRecord.token_id == db_token.id,
+        AttendanceRecord.token_id.in_(all_token_ids),
     ).first()
     if existing:
-        entry = db.get(ScheduleEntry, db_token.schedule_entry_id)
-        device = db.get(Device, db_token.device_id)
         return templates.TemplateResponse(
             request=request,
             name="checkin.html",
@@ -113,10 +128,6 @@ async def checkin_page(
                 "end_time": entry.end_time.strftime("%H:%M") if entry else "",
             },
         )
-
-    # Show the check-in form
-    entry = db.get(ScheduleEntry, db_token.schedule_entry_id)
-    device = db.get(Device, db_token.device_id)
     return templates.TemplateResponse(
         request=request,
         name="checkin.html",
@@ -146,18 +157,37 @@ async def checkin_confirm(
             context={"error": error},
         )
 
-    # Check for duplicate
+    # Verify student is enrolled in the class this token belongs to
+    entry = db.get(ScheduleEntry, db_token.schedule_entry_id)
+    if entry and user.class_name != entry.class_name:
+        return templates.TemplateResponse(
+            request=request,
+            name="checkin.html",
+            context={"error": "Sie gehören nicht zu dieser Klasse."},
+        )
+
+    # Check for duplicate across ALL tokens for this lesson + date
+    all_token_ids = [
+        t[0] for t in db.query(AttendanceToken.id).filter(
+            AttendanceToken.schedule_entry_id == db_token.schedule_entry_id,
+            AttendanceToken.lesson_date == db_token.lesson_date,
+        ).all()
+    ]
     existing = db.query(AttendanceRecord).filter(
         AttendanceRecord.student_id == user.id,
-        AttendanceRecord.token_id == db_token.id,
+        AttendanceRecord.token_id.in_(all_token_ids),
     ).first()
     if existing:
+        device = db.get(Device, db_token.device_id)
         return templates.TemplateResponse(
             request=request,
             name="checkin.html",
             context={
                 "already_checked_in": True,
                 "checked_in_time": existing.checked_in_at.strftime("%H:%M"),
+                "room": device.room if device and device.room else "Unbekannt",
+                "start_time": entry.start_time.strftime("%H:%M") if entry else "",
+                "end_time": entry.end_time.strftime("%H:%M") if entry else "",
             },
         )
 

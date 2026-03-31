@@ -47,24 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Dynamic form submission for save button (avoids nested form issue)
-    if (saveBtn) {
-      saveBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const submitForm = document.createElement('form');
-        submitForm.method = 'POST';
-        submitForm.action = '/admin/devices/update';
-        inputs.forEach(el => {
-          const hidden = document.createElement('input');
-          hidden.type = 'hidden';
-          hidden.name = el.name;
-          hidden.value = el.value;
-          submitForm.appendChild(hidden);
-        });
-        document.body.appendChild(submitForm);
-        submitForm.submit();
-      });
-    }
   }
 
   // --- Schedule conflict check (multiple forms, one per device) ---
