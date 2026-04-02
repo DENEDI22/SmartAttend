@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Physical Devices
-status: planning
-stopped_at: Phase 8 context gathered
-last_updated: "2026-04-02T09:44:57.148Z"
-last_activity: 2026-04-02 -- v1.1 roadmap revised (merged Phase 10 into Phase 8)
+status: Ready to plan
+stopped_at: Completed 08-network-public-access-08-02-PLAN.md
+last_updated: "2026-04-02T10:11:24.944Z"
 progress:
   total_phases: 2
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 78
+  completed_phases: 1
+  total_plans: 2
+  completed_plans: 2
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device -- the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 8 - Network & Public Access
+**Current focus:** Phase 08 — network-public-access
 
 ## Current Position
 
-Phase: 8 of 9 (Network & Public Access)
-Plan: 0 of 0 in current phase (not yet planned)
-Status: Ready to plan
-Last activity: 2026-04-02 -- v1.1 roadmap revised (merged Phase 10 into Phase 8)
-
-Progress: [################..............] 78% (7/9 phases)
+Phase: 9
+Plan: Not started
 
 ## Performance Metrics
 
@@ -51,6 +45,8 @@ Progress: [################..............] 78% (7/9 phases)
 | 5. Student Check-in | 2 | ~6 min | ~3 min |
 | 6. MQTT & Scheduler | 2 | ~6 min | ~3 min |
 | 7. Dummy Clients | 2 | ~6 min | ~3 min |
+| Phase 08 P01 | 186 | 2 tasks | 6 files |
+| Phase 08-network-public-access P02 | 31s | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -64,6 +60,8 @@ Recent decisions affecting current work:
 - [v1.1]: Ngrok chosen for public tunneling (configured via .env)
 - [v1.1]: Dummy clients removed (one commented out for dev use)
 - [v1.1]: Cleanup merged into Phase 8 -- dummy client removal happens alongside docker-compose network/ngrok changes
+- [Phase 08]: BASE_URL includes scheme+port (http://localhost:8000) for simple URL concatenation
+- [Phase 08-network-public-access]: Production topology: server + mqtt + ngrok (3 active services), dummy clients removed
 
 ### Pending Todos
 
@@ -76,6 +74,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T09:44:57.141Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-network-public-access/08-CONTEXT.md
+Last session: 2026-04-02T10:01:18.956Z
+Stopped at: Completed 08-network-public-access-08-02-PLAN.md
+Resume file: None

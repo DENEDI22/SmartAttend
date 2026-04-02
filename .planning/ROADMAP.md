@@ -42,7 +42,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
   4. `docker compose up` starts only server, mqtt, and ngrok containers (no dummy clients running); one dummy client service remains commented out in docker-compose.yml for dev use
 **Plans:** 2 plans
 Plans:
-- [ ] 08-01-PLAN.md — BASE_URL config migration + test updates (NET-01, NET-03, NET-02 env vars)
+- [x] 08-01-PLAN.md — BASE_URL config migration + test updates (NET-01, NET-03, NET-02 env vars)
 - [ ] 08-02-PLAN.md — Docker Compose ngrok service + dummy client cleanup (NET-02, CLN-01)
 
 ### Phase 9: ESP32 Firmware
