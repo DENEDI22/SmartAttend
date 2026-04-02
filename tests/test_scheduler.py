@@ -220,7 +220,7 @@ class TestIssueTokens:
         device_id_arg = call_args[0][0]
         url_arg = call_args[0][1]
         assert device_id_arg == "e101"
-        assert url_arg.startswith("http://127.0.0.1/checkin?token=")
+        assert url_arg.startswith("http://127.0.0.1:8000/checkin?token=")
         # Verify UUID format in URL
         token_str = url_arg.split("token=")[1]
         uuid.UUID(token_str)  # raises if not valid UUID

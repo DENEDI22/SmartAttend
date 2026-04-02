@@ -74,7 +74,7 @@ def _issue_tokens():
             db.commit()
 
             # Publish token URL to device via MQTT
-            url = f"http://{settings.server_ip}/checkin?token={token_str}"
+            url = f"{settings.base_url}/checkin?token={token_str}"
             publish_token(device.device_id, url)
             logger.info("Issued token for device %s: %s", device.device_id, url)
 

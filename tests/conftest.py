@@ -28,7 +28,7 @@ def override_settings(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", TEST_DATABASE_URL)
     monkeypatch.setenv("MQTT_BROKER", "localhost")
     monkeypatch.setenv("MQTT_PORT", "1883")
-    monkeypatch.setenv("SERVER_IP", "127.0.0.1")
+    monkeypatch.setenv("BASE_URL", "http://127.0.0.1:8000")
     monkeypatch.setenv("ADMIN_EMAIL", "")
     monkeypatch.setenv("ADMIN_PASSWORD", "")
     # Clear lru_cache so each test gets fresh settings

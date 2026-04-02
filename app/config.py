@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     mqtt_port: int = 1883
 
     # Network
-    server_ip: str = "localhost"
+    base_url: str = "http://localhost:8000"
 
     # Admin bootstrap (D-13, D-14)
     admin_email: str = ""
