@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Physical Devices
-status: Ready to plan
-stopped_at: Phase 9 context gathered
-last_updated: "2026-04-02T10:19:59.640Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 09-01-PLAN.md
+last_updated: "2026-04-02T10:46:17.310Z"
 progress:
   total_phases: 2
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device -- the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 08 — network-public-access
+**Current focus:** Phase 09 — esp32-firmware
 
 ## Current Position
 
-Phase: 9
-Plan: Not started
+Phase: 09 (esp32-firmware) — EXECUTING
+Plan: 1 of 1
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: Not started
 | 7. Dummy Clients | 2 | ~6 min | ~3 min |
 | Phase 08 P01 | 186 | 2 tasks | 6 files |
 | Phase 08-network-public-access P02 | 31s | 1 tasks | 1 files |
+| Phase 09-esp32-firmware P01 | 180 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,7 @@ Recent decisions affecting current work:
 - [v1.1]: Cleanup merged into Phase 8 -- dummy client removal happens alongside docker-compose network/ngrok changes
 - [Phase 08]: BASE_URL includes scheme+port (http://localhost:8000) for simple URL concatenation
 - [Phase 08-network-public-access]: Production topology: server + mqtt + ngrok (3 active services), dummy clients removed
+- [Phase 09-esp32-firmware]: ESP32 firmware created with verbatim POC NFC functions, #define config block, MQTT contract alignment
 
 ### Pending Todos
 
@@ -74,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T10:19:59.633Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-esp32-firmware/09-CONTEXT.md
+Last session: 2026-04-02T10:46:17.306Z
+Stopped at: Completed 09-01-PLAN.md
+Resume file: None

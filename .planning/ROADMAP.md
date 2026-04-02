@@ -56,7 +56,7 @@ Plans:
   4. LED on GPIO 13 is lit when MQTT is connected and off when disconnected
 **Plans:** 1 plan
 Plans:
-- [ ] 09-01-PLAN.md — Complete ESP32 firmware: MQTT contract (register, heartbeat, token subscribe), NFC write, LED indicator (FW-01, FW-02, FW-03, FW-04)
+- [x] 09-01-PLAN.md — Complete ESP32 firmware: MQTT contract (register, heartbeat, token subscribe), NFC write, LED indicator (FW-01, FW-02, FW-03, FW-04)
 
 ## Progress
 

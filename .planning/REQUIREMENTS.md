@@ -9,20 +9,20 @@ Requirements for physical device integration. Each maps to roadmap phases.
 
 ### Network & Infrastructure
 
-- [ ] **NET-01**: Mosquitto broker listens on LAN interface so ESP32 devices can connect over WiFi
-- [ ] **NET-02**: Ngrok runs as a Docker Compose service, configured via `.env` (auth token + domain)
-- [ ] **NET-03**: Server reads ngrok public base URL from environment and uses it for all check-in token URLs
+- [x] **NET-01**: Mosquitto broker listens on LAN interface so ESP32 devices can connect over WiFi
+- [x] **NET-02**: Ngrok runs as a Docker Compose service, configured via `.env` (auth token + domain)
+- [x] **NET-03**: Server reads ngrok public base URL from environment and uses it for all check-in token URLs
 
 ### Firmware
 
-- [ ] **FW-01**: ESP32 firmware publishes registration JSON to `devices/register` on MQTT connect
-- [ ] **FW-02**: ESP32 firmware publishes heartbeat to `devices/{device_id}/status` every 30 seconds
-- [ ] **FW-03**: ESP32 firmware subscribes to `attendance/device/{device_id}` and writes received URL to NFC tag
-- [ ] **FW-04**: ESP32 lights LED on GPIO 13 when MQTT is connected, turns off when disconnected
+- [x] **FW-01**: ESP32 firmware publishes registration JSON to `devices/register` on MQTT connect
+- [x] **FW-02**: ESP32 firmware publishes heartbeat to `devices/{device_id}/status` every 30 seconds
+- [x] **FW-03**: ESP32 firmware subscribes to `attendance/device/{device_id}` and writes received URL to NFC tag
+- [x] **FW-04**: ESP32 lights LED on GPIO 13 when MQTT is connected, turns off when disconnected
 
 ### Cleanup
 
-- [ ] **CLN-01**: Dummy client containers removed from Docker Compose (one kept commented out for dev use)
+- [x] **CLN-01**: Dummy client containers removed from Docker Compose (one kept commented out for dev use)
 
 ## Future Requirements
 
@@ -48,14 +48,14 @@ Requirements for physical device integration. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NET-01 | Phase 8 | Pending |
-| NET-02 | Phase 8 | Pending |
-| NET-03 | Phase 8 | Pending |
-| CLN-01 | Phase 8 | Pending |
-| FW-01 | Phase 9 | Pending |
-| FW-02 | Phase 9 | Pending |
-| FW-03 | Phase 9 | Pending |
-| FW-04 | Phase 9 | Pending |
+| NET-01 | Phase 8 | Complete |
+| NET-02 | Phase 8 | Complete |
+| NET-03 | Phase 8 | Complete |
+| CLN-01 | Phase 8 | Complete |
+| FW-01 | Phase 9 | Complete |
+| FW-02 | Phase 9 | Complete |
+| FW-03 | Phase 9 | Complete |
+| FW-04 | Phase 9 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 8 total
