@@ -1,7 +1,7 @@
 # Requirements: SmartAttend
 
 **Defined:** 2026-04-02
-**Core Value:** Students can check in to a lesson by tapping their phone on the classroom NFC device — the entire flow from tap to attendance record must work reliably.
+**Core Value:** Students can check in to a lesson by tapping their phone on the classroom NFC device -- the entire flow from tap to attendance record must work reliably.
 
 ## v1.1 Requirements
 
@@ -26,11 +26,11 @@ Requirements for physical device integration. Each maps to roadmap phases.
 
 ## Future Requirements
 
-### Firmware — Deferred
+### Firmware -- Deferred
 
 - **FW-LUX**: ESP32 firmware publishes lux reading to `sensors/{device_id}/lux` every 60 seconds (sensor not connected yet)
 
-### Security — Deferred
+### Security -- Deferred
 
 - **SEC-01**: MQTT password-based authentication for production hardening
 
@@ -42,26 +42,26 @@ Requirements for physical device integration. Each maps to roadmap phases.
 | RPi hardware power management | Out of scope for prototype |
 | Student NFC card check-in (UID) | Requires firmware support beyond current scope |
 | OAuth / SSO login | Username/password sufficient for school prototype |
-| Lux sensor readings | Hardware sensor not connected yet — deferred to future milestone |
+| Lux sensor readings | Hardware sensor not connected yet -- deferred to future milestone |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NET-01 | — | Pending |
-| NET-02 | — | Pending |
-| NET-03 | — | Pending |
-| FW-01 | — | Pending |
-| FW-02 | — | Pending |
-| FW-03 | — | Pending |
-| FW-04 | — | Pending |
-| CLN-01 | — | Pending |
+| NET-01 | Phase 8 | Pending |
+| NET-02 | Phase 8 | Pending |
+| NET-03 | Phase 8 | Pending |
+| CLN-01 | Phase 8 | Pending |
+| FW-01 | Phase 9 | Pending |
+| FW-02 | Phase 9 | Pending |
+| FW-03 | Phase 9 | Pending |
+| FW-04 | Phase 9 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 8 total
-- Mapped to phases: 0
-- Unmapped: 8 (pending roadmap)
+- Mapped to phases: 8
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 after initial definition*
+*Last updated: 2026-04-02 after roadmap revision*
