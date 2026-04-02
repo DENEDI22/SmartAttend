@@ -54,7 +54,9 @@ Plans:
   2. ESP32 shows as "online" in the admin UI while running (heartbeat every 30s to `devices/{id}/status`)
   3. When a lesson is active, the ESP32 receives the token URL and writes it as an NDEF URI record to an NFC tag
   4. LED on GPIO 13 is lit when MQTT is connected and off when disconnected
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 09-01-PLAN.md — Complete ESP32 firmware: MQTT contract (register, heartbeat, token subscribe), NFC write, LED indicator (FW-01, FW-02, FW-03, FW-04)
 
 ## Progress
 
@@ -70,5 +72,5 @@ Phases execute in numeric order: 8 -> 9
 | 5. Student Check-in | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 6. MQTT & Scheduler | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 7. Dummy Clients | v1.0 | 2/2 | Complete | 2026-03-31 |
-| 8. Network & Public Access | v1.1 | 0/2 | Planning | - |
-| 9. ESP32 Firmware | v1.1 | 0/0 | Not started | - |
+| 8. Network & Public Access | v1.1 | 1/2 | In Progress | - |
+| 9. ESP32 Firmware | v1.1 | 0/1 | Planned | - |
