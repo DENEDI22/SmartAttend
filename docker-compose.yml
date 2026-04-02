@@ -23,41 +23,29 @@ services:
       - mosquitto-data:/mosquitto/data
     restart: unless-stopped
 
-  client-e101:
-    build: ./dummy_client
+  ngrok:
+    image: ngrok/ngrok:latest
+    command: http server:8000 --domain=${NGROK_DOMAIN}
     environment:
-      - DEVICE_ID=e101
-      - ROOM=E101
-      - MQTT_BROKER=mqtt
-      - MQTT_PORT=1883
-      - LUX_VALUE=400
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    ports:
+      - "4040:4040"
     depends_on:
-      - mqtt
+      - server
     restart: unless-stopped
 
-  client-e102:
-    build: ./dummy_client
-    environment:
-      - DEVICE_ID=e102
-      - ROOM=E102
-      - MQTT_BROKER=mqtt
-      - MQTT_PORT=1883
-      - LUX_VALUE=350
-    depends_on:
-      - mqtt
-    restart: unless-stopped
-
-  client-e103:
-    build: ./dummy_client
-    environment:
-      - DEVICE_ID=e103
-      - ROOM=E103
-      - MQTT_BROKER=mqtt
-      - MQTT_PORT=1883
-      - LUX_VALUE=500
-    depends_on:
-      - mqtt
-    restart: unless-stopped
+  # ── Dummy client (uncomment for development/testing without ESP32) ──────
+  # client-dev:
+  #   build: ./dummy_client
+  #   environment:
+  #     - DEVICE_ID=e101
+  #     - ROOM=E101
+  #     - MQTT_BROKER=mqtt
+  #     - MQTT_PORT=1883
+  #     - LUX_VALUE=400
+  #   depends_on:
+  #     - mqtt
+  #   restart: unless-stopped
 
 volumes:
   mosquitto-data:
