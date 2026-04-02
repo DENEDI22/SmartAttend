@@ -82,6 +82,6 @@ def test_env_example_complete():
         pytest.skip(".env.example not yet created — pending Plan 03")
     with open(env_example_path) as f:
         content = f.read()
-    required_vars = ["SECRET_KEY", "DATABASE_URL", "MQTT_BROKER", "MQTT_PORT", "SERVER_IP"]
+    required_vars = ["SECRET_KEY", "DATABASE_URL", "MQTT_BROKER", "MQTT_PORT", "BASE_URL"]
     for var in required_vars:
         assert var in content, f".env.example missing variable: {var}"
