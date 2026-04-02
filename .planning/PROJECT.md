@@ -22,12 +22,11 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ## Current State
 
-**v1.0 MVP shipped 2026-03-31.** Full prototype operational with Python dummy clients simulating ESP32 devices.
+**v1.0 MVP shipped 2026-03-31.** Full prototype operational. Phase 8 complete — server exposed via ngrok, token URLs use public domain, Compose topology updated.
 
-- 3,506 lines of Python across 7 phases (18 plans)
 - Tech stack: FastAPI + Jinja2 + SQLAlchemy + SQLite + Mosquitto + paho-mqtt + APScheduler
-- Docker Compose stack with 6 containers (server, mqtt, 3 dummy clients, sqlite volume)
-- 54 passing tests + 1 xfailed
+- Docker Compose stack with 3 containers (server, mqtt, ngrok)
+- 75 passing tests + 1 xfailed
 
 ## Requirements
 
@@ -105,4 +104,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-02 after v1.1 milestone start*
+*Last updated: 2026-04-02 after Phase 8 completion*
