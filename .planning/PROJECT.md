@@ -8,6 +8,18 @@ SmartAttend is an NFC-based attendance tracking system for a Raspberry Pi server
 
 Students can check in to a lesson by tapping their phone on the classroom NFC device — the entire flow from tap to attendance record must work reliably.
 
+## Current Milestone: v1.1 Physical Devices
+
+**Goal:** Replace dummy clients with physical ESP32 devices and expose the system to the internet via ngrok.
+
+**Target features:**
+- Mosquitto broker accessible on LAN (ESP32 devices connect over WiFi)
+- Ngrok container in Docker Compose, configured via `.env` (URL + auth token)
+- Check-in token URLs generated with ngrok public base URL
+- ESP32 firmware aligned to server MQTT contract (register, heartbeat, lux, token subscribe)
+- ESP32 online-indicator LED on GPIO 13 (lit when MQTT connected)
+- Dummy clients removed from Compose (one kept commented out for dev)
+
 ## Current State
 
 **v1.0 MVP shipped 2026-03-31.** Full prototype operational with Python dummy clients simulating ESP32 devices.
@@ -31,7 +43,12 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ### Active
 
-(None — planning next milestone)
+- [ ] Mosquitto broker accessible on LAN for ESP32 WiFi connections
+- [ ] Ngrok container in Docker Compose, configured via `.env` (URL + auth token)
+- [ ] Check-in token URLs generated with ngrok public base URL
+- [ ] ESP32 firmware aligned to server MQTT contract (register, heartbeat, lux, token subscribe)
+- [ ] ESP32 online-indicator LED on GPIO 13 (lit when MQTT connected)
+- [ ] Dummy clients removed from Compose (one kept commented out for dev)
 
 ### Out of Scope
 
@@ -88,4 +105,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-31 after v1.0 milestone*
+*Last updated: 2026-04-02 after v1.1 milestone start*
