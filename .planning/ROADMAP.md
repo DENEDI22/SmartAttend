@@ -40,7 +40,10 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
   2. Ngrok container starts with Docker Compose and establishes a tunnel to the server
   3. Check-in token URLs in MQTT messages use the ngrok public domain (not localhost)
   4. `docker compose up` starts only server, mqtt, and ngrok containers (no dummy clients running); one dummy client service remains commented out in docker-compose.yml for dev use
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 08-01-PLAN.md — BASE_URL config migration + test updates (NET-01, NET-03, NET-02 env vars)
+- [ ] 08-02-PLAN.md — Docker Compose ngrok service + dummy client cleanup (NET-02, CLN-01)
 
 ### Phase 9: ESP32 Firmware
 **Goal**: Physical ESP32 devices participate in the attendance flow -- registering, heartbeating, receiving tokens, and writing NFC tags
@@ -67,5 +70,5 @@ Phases execute in numeric order: 8 -> 9
 | 5. Student Check-in | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 6. MQTT & Scheduler | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 7. Dummy Clients | v1.0 | 2/2 | Complete | 2026-03-31 |
-| 8. Network & Public Access | v1.1 | 0/0 | Not started | - |
+| 8. Network & Public Access | v1.1 | 0/2 | Planning | - |
 | 9. ESP32 Firmware | v1.1 | 0/0 | Not started | - |
