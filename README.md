@@ -20,10 +20,10 @@ Tokens rotate every minute and expire when the lesson ends. Duplicate check-ins 
 │  ESP32   │◄────────│  Raspberry  │◄────────│  Student  │
 │  + NFC   │────────►│  Pi Server  │────────►│  Phone    │
 └──────────┘         └─────────────┘         └──────────┘
-                      │  FastAPI    │
-                      │  Mosquitto  │
-                      │  SQLite     │
-                      └─────────────┘
+                     │  FastAPI    │
+                     │  Mosquitto  │
+                     │  SQLite     │
+                     └─────────────┘
 ```
 
 - **Server**: FastAPI + Jinja2, SQLAlchemy + SQLite, APScheduler, paho-mqtt
