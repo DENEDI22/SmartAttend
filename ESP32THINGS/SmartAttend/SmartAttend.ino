@@ -223,11 +223,10 @@ void writeNfc(char* link) {
   buf[i++] = 0xFE;  // Terminator TLV
 
   uint8_t totalBlocks = bufSize / 16;
+  uint8_t blockNum = 4;
   for (uint8_t b = 0; b < totalBlocks; b++) {
-    uint8_t blockNum = 4 + b;
-
+    // Skip trailer blocks (block % 4 == 3)
     if (blockNum % 4 == 3) {
-      b++;
       blockNum++;
     }
     if (blockNum % 4 == 0) {
@@ -241,6 +240,7 @@ void writeNfc(char* link) {
     }
 
     nfc.mifareclassic_WriteDataBlock(blockNum, &buf[b * 16]);
+    blockNum++;
   }
 
   free(buf);
