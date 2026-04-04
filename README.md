@@ -17,8 +17,8 @@ Tokens rotate every minute and expire when the lesson ends. Duplicate check-ins 
 
 ```
 ┌──────────┐  MQTT   ┌─────────────┐  HTTP   ┌──────────┐
-│  ESP32   │◄────────│  Raspberry  │◄────────│  Student  │
-│  + NFC   │────────►│  Pi Server  │────────►│  Phone    │
+│  ESP32   │◄────────│  Raspberry  │◄────────│  Student │
+│  + NFC   │────────►│  Pi Server  │────────►│  Phone   │
 └──────────┘         └─────────────┘         └──────────┘
                      │  FastAPI    │
                      │  Mosquitto  │
