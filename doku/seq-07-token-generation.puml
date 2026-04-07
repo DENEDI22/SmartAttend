@@ -1,0 +1,38 @@
+@startuml Attendance Token Generation
+title 07 — Attendance Token Generation (Scheduler)
+
+participant "APScheduler\n(every 1 min)" as Sched
+database "SQLite" as DB
+participant "MQTT Publisher" as MQTT
+participant "Mosquitto\nBroker" as Broker
+participant "ESP32 /\nDummy Client" as ESP
+
+Sched -> Sched : _issue_tokens()\ntriggered every 1 min
+Sched -> Sched : now, today, weekday
+
+Sched -> DB : SELECT ScheduleEntry\n  JOIN Device\n  WHERE weekday = today\n    AND start_time <= now\n    AND end_time > now\n    AND Device.is_enabled = True
+DB --> Sched : matching entries[]
+
+loop for each ScheduleEntry
+    Sched -> DB : query Device by entry.device_id
+    DB --> Sched : Device
+
+    Sched -> DB : UPDATE AttendanceToken\n  SET is_active=False\n  WHERE device_id = device.id\n    AND is_active = True
+    DB --> Sched : previous tokens deactivated
+
+    Sched -> Sched : generate UUID token
+
+    Sched -> DB : INSERT AttendanceToken(\n  token=uuid,\n  device_id,\n  schedule_entry_id,\n  lesson_date=today,\n  is_active=True,\n  expires_at=lesson end_time\n)
+    DB --> Sched : committed
+
+    Sched -> MQTT : publish_token(device_id, url)
+    note right
+        URL = {base_url}/checkin?token={uuid}
+        QoS = 1
+    end note
+    MQTT -> Broker : PUBLISH\n"attendance/device/{device_id}"\npayload: check-in URL
+    Broker -> ESP : deliver message
+    ESP -> ESP : write URL to NFC tag
+end
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml Device Heartbeat Monitoring
+title 05 — Device Heartbeat Monitoring
+
+participant "ESP32 /\nDummy Client" as ESP
+participant "Mosquitto\nMQTT Broker" as Broker
+participant "FastAPI\nMQTT Handler" as Handler
+participant "APScheduler\n(every 30s)" as Sched
+database "SQLite\n(Device)" as DB
+
+== Part A: Heartbeat Received (every ~30s per device) ==
+
+ESP -> Broker : PUBLISH "devices/{id}/status"\npayload: "online"
+Broker -> Handler : _on_message() callback
+Handler -> Handler : _handle_heartbeat(device_id)
+
+Handler -> DB : query Device by device_id
+DB --> Handler : Device | None
+
+alt Device not found
+    Handler -> DB : INSERT Device(\n  device_id,\n  is_enabled=False,\n  is_online=True,\n  last_seen=now\n)
+    DB --> Handler : committed
+    Handler -> Handler : log "Auto-registered\ndevice from heartbeat"
+else Device exists
+    Handler -> DB : UPDATE Device SET\n  is_online=True,\n  last_seen=now
+    DB --> Handler : committed
+end
+
+== Part B: Stale Device Check (scheduler job) ==
+
+Sched -> Sched : _check_heartbeats()\ntriggered every 30s
+Sched -> Sched : threshold = now − 90s
+
+Sched -> DB : UPDATE Device SET is_online=False\nWHERE is_online=True\n  AND last_seen < threshold
+DB --> Sched : N rows updated, committed
+
+@enduml

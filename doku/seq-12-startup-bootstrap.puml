@@ -1,0 +1,61 @@
+@startuml Startup Bootstrap
+title 12 — Application Startup Bootstrap
+
+participant "FastAPI\nlifespan()" as App
+database "SQLite" as DB
+participant "Config\n(env vars)" as Config
+participant "AuthService\n(bcrypt)" as Auth
+participant "MQTT Client" as MQTT
+participant "APScheduler" as Sched
+
+== Database Initialization ==
+
+App -> DB : Base.metadata.create_all(engine)
+note right : Creates all tables\nif they don't exist
+DB --> App : tables ready
+
+== Admin Seeding ==
+
+App -> App : _seed_admin()
+App -> Config : read ADMIN_EMAIL,\nADMIN_PASSWORD
+Config --> App : email, password
+
+alt env vars empty
+    App -> App : skip seeding (no-op)
+else env vars set
+    App -> DB : query User\nWHERE role="admin"\nLIMIT 1
+    DB --> App : existing admin | None
+
+    alt Admin already exists
+        App -> App : skip (idempotent)
+    else No admin yet
+        App -> Auth : get_password_hash(password)
+        Auth --> App : bcrypt hash
+        App -> DB : INSERT User(\n  email, "Admin", "Admin",\n  role="admin",\n  password_hash,\n  is_active=True\n)
+        DB --> App : committed
+    end
+end
+
+App -> DB : close session
+
+== Service Startup ==
+
+App -> MQTT : start_mqtt()
+MQTT -> MQTT : connect to broker\nsubscribe to topics\nstart background loop
+MQTT --> App : MQTT running
+
+App -> Sched : start_scheduler()
+Sched -> Sched : add job: _issue_tokens (1 min)
+Sched -> Sched : add job: _check_heartbeats (30s)
+Sched --> App : scheduler running
+
+App -> App : yield (app serves requests)
+
+== Shutdown ==
+
+App -> Sched : stop_scheduler()
+Sched --> App : stopped
+App -> MQTT : stop_mqtt()
+MQTT --> App : disconnected
+
+@enduml

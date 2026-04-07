@@ -1,0 +1,24 @@
+@startuml Device Registration via MQTT
+title 04 — Device Registration via MQTT
+
+participant "ESP32 /\nDummy Client" as ESP
+participant "Mosquitto\nMQTT Broker" as Broker
+participant "FastAPI\nMQTT Handler" as Handler
+database "SQLite\n(Device)" as DB
+
+ESP -> Broker : PUBLISH "devices/register"\n{"device_id": "esp32-001"}
+Broker -> Handler : _on_message() callback
+Handler -> Handler : _handle_register()\nparse JSON or plain text
+
+Handler -> DB : query Device\nby device_id
+DB --> Handler : Device | None
+
+alt Device already exists
+    Handler -> Handler : skip (idempotent)
+else Device not found
+    Handler -> DB : INSERT Device(\n  device_id,\n  is_enabled=False,\n  is_online=False\n)
+    DB --> Handler : committed
+    Handler -> Handler : log "Registered new device"
+end
+
+@enduml

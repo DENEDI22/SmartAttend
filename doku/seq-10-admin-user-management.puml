@@ -1,0 +1,88 @@
+@startuml Admin User Management
+title 10 — Admin User Management
+
+actor Admin
+participant "FastAPI\n/admin/users" as API
+database "SQLite\n(User, SchoolClass)" as DB
+
+== View Users ==
+
+Admin -> API : GET /admin/users
+API -> API : require_role("admin")
+API -> DB : SELECT * FROM User\nORDER BY last_name, first_name
+DB --> API : users[]
+API -> DB : SELECT * FROM SchoolClass\nORDER BY name
+DB --> API : school_classes[]
+API --> Admin : admin_users.html\n(user table + create form)
+
+== Create User ==
+
+Admin -> API : POST /admin/users/create\n(first_name, last_name,\nemail, password, role, class_name)
+API -> API : require_role("admin")
+
+API -> DB : query User by email
+DB --> API : existing | None
+
+alt Email already exists
+    API --> Admin : 303 → /admin/users\n?error=E-Mail+existiert+bereits
+else
+    API -> API : validate role ∈\n{admin, teacher, student}
+    alt Invalid role
+        API --> Admin : 303 → /admin/users?error=...
+    else
+
+        opt class_name provided
+            API -> DB : query SchoolClass by name
+            DB --> API : SchoolClass | None
+            opt SchoolClass not found
+                API -> DB : INSERT SchoolClass(name)
+                DB --> API : created
+            end
+        end
+
+        API -> API : bcrypt hash password
+        API -> DB : INSERT User(\n  email, first_name, last_name,\n  role, class_name,\n  password_hash, is_active=True\n)
+        DB --> API : committed
+        API --> Admin : 303 → /admin/users\n?msg=Erfolgreich+erstellt
+    end
+end
+
+== Deactivate User ==
+
+Admin -> API : POST /admin/users/{id}/deactivate
+API -> API : require_role("admin")
+API -> DB : query User by id
+DB --> API : User | None
+
+alt User not found
+    API --> Admin : 303 → /admin/users?error=...
+else
+    API -> DB : UPDATE User SET is_active=False
+    DB --> API : committed
+    API --> Admin : 303 → /admin/users\n?msg=Benutzer+deaktiviert
+end
+
+== Bulk Update Users ==
+
+Admin -> API : POST /admin/users/update\n(first_name_{id}, last_name_{id},\nclass_name_{id}, role_{id} ...)
+API -> API : require_role("admin")
+API -> DB : SELECT * FROM User
+DB --> API : all users[]
+
+loop for each user
+    API -> API : read form fields\nfirst_name_{id}, last_name_{id},\nclass_name_{id}, role_{id}
+    API -> DB : UPDATE User fields
+
+    opt new class_name provided
+        API -> DB : query SchoolClass by name
+        opt not exists
+            API -> DB : INSERT SchoolClass(name)
+        end
+    end
+end
+
+API -> DB : COMMIT
+DB --> API : committed
+API --> Admin : 303 → /admin/users\n?msg=Erfolgreich+aktualisiert
+
+@enduml

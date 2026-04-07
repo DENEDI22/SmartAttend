@@ -1,0 +1,11 @@
+@startuml User Logout
+title 02 — User Logout Flow
+
+actor Browser
+participant "FastAPI\n/auth/logout" as API
+
+Browser -> API : POST /auth/logout
+API -> API : delete_cookie("access_token")
+API --> Browser : 303 Redirect → /login\n(cookie cleared)
+
+@enduml

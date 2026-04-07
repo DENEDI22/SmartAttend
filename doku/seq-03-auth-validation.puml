@@ -1,0 +1,52 @@
+@startuml Auth Validation
+title 03 — Authentication & Authorization (Dependency Injection)
+
+actor Client
+participant "FastAPI\nProtected Endpoint" as Endpoint
+participant "get_current_user()\nDependency" as Dep
+participant "jose JWT\nLibrary" as JWT
+database "SQLite\n(User)" as DB
+participant "require_role()\nDependency" as Role
+
+Client -> Endpoint : Request to protected route\n(Cookie: access_token=...)
+Endpoint -> Dep : resolve dependency
+
+alt No cookie present
+    Dep --> Client : 303 Redirect → /login
+else Cookie present
+    Dep -> JWT : jwt.decode(token, SECRET, HS256)
+
+    alt JWT invalid or expired
+        JWT --> Dep : JWTError / ExpiredSignatureError
+        Dep --> Client : 303 Redirect → /login
+    else JWT valid
+        JWT --> Dep : payload {sub, role, exp}
+        Dep -> Dep : extract user_id from "sub"
+
+        alt sub claim missing
+            Dep --> Client : 303 Redirect → /login
+        else
+            Dep -> DB : db.get(User, user_id)
+            DB --> Dep : User | None
+
+            alt User not found or is_active=False
+                Dep --> Client : 303 Redirect → /login
+            else User valid
+                Dep --> Endpoint : User object
+
+                opt Endpoint uses require_role()
+                    Endpoint -> Role : check user.role in allowed_roles
+
+                    alt Role not allowed
+                        Role --> Client : 403 Forbidden\n"Keine Berechtigung."
+                    else Role matches
+                        Role --> Endpoint : User object
+                        Endpoint --> Client : Normal response
+                    end
+                end
+            end
+        end
+    end
+end
+
+@enduml

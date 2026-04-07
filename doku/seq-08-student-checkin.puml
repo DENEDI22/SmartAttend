@@ -1,0 +1,81 @@
+@startuml Student Check-in
+title 08 — Student Check-in (NFC Tap → Attendance Record)
+
+actor Student
+participant "NFC Tag\n(on ESP32)" as NFC
+participant "Student\nPhone Browser" as Phone
+participant "FastAPI\n/checkin" as API
+database "SQLite" as DB
+
+== Phase 1: NFC Tap ==
+
+Student -> NFC : tap phone on device
+NFC --> Phone : open URL\n/checkin?token={uuid}
+
+== Phase 2: GET /checkin ==
+
+Phone -> API : GET /checkin?token={uuid}\n(Cookie: access_token=...)
+
+API -> API : _get_user_from_cookie()
+
+alt No cookie / invalid JWT
+    API --> Phone : 303 Redirect →\n/login?next=/checkin?token={uuid}
+    Phone -> API : (login flow — see Diagram 01)
+    Phone -> API : GET /checkin?token={uuid}\n(now with valid cookie)
+end
+
+API -> API : check user.role == "student"
+alt Not a student
+    API --> Phone : "Nur Schüler können\nsich einchecken."
+end
+
+API -> API : _validate_token(token)
+API -> DB : query AttendanceToken by token
+DB --> API : AttendanceToken | None
+
+alt Token not found / inactive / expired
+    API --> Phone : error page
+else Token valid
+    API -> DB : query ScheduleEntry\nby token.schedule_entry_id
+    DB --> API : ScheduleEntry
+
+    API -> API : check student.class_name\n== entry.class_name
+    alt Class mismatch
+        API --> Phone : "Sie gehören nicht\nzu dieser Klasse."
+    end
+
+    API -> DB : query ALL AttendanceToken IDs\nfor this lesson + date
+    DB --> API : token_ids[]
+    API -> DB : query AttendanceRecord\nWHERE student_id AND token_id IN (...)
+    DB --> API : existing record | None
+
+    alt Already checked in
+        API --> Phone : "Bereits eingecheckt\num {time}"
+    else Not yet checked in
+        API --> Phone : check-in form\n(room, times, confirm button)
+    end
+end
+
+== Phase 3: POST /checkin ==
+
+Phone -> API : POST /checkin\n(token={uuid})
+
+API -> API : require_role("student")
+API -> API : _validate_token(token)
+API -> DB : (repeat validation + class check\n+ duplicate check)
+
+alt Validation fails
+    API --> Phone : error page
+else All valid
+    API -> DB : INSERT AttendanceRecord(\n  student_id,\n  token_id,\n  checked_in_at=now\n)
+
+    alt IntegrityError (race condition)
+        DB --> API : UniqueConstraint violation
+        API --> Phone : "Sie haben sich\nbereits eingecheckt."
+    else Success
+        DB --> API : committed
+        API --> Phone : success page ✓
+    end
+end
+
+@enduml

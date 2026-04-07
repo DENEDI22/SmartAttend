@@ -1,0 +1,49 @@
+@startuml User Login
+title 01 — User Login Flow
+
+actor Browser
+participant "FastAPI\n/auth/login" as API
+database "SQLite\n(User)" as DB
+participant "AuthService\n(bcrypt + JWT)" as Auth
+
+Browser -> API : POST /auth/login\n(email, password)
+
+API -> DB : query User by email
+DB --> API : User | None
+
+alt User not found or inactive
+    API --> Browser : 200 login.html\n(error message)
+else User found
+    API -> Auth : authenticate_user(email, password)
+    Auth -> Auth : bcrypt.verify(password, hash)
+    Auth --> API : True / False
+
+    alt Password invalid
+        API --> Browser : 200 login.html\n(error message)
+    else Password valid
+        API -> Auth : create_access_token(\nsub=user.id, role)
+        note right
+            Expiry:
+            student → 1h
+            staff → 8h
+        end note
+        Auth -> Auth : jwt.encode(payload, SECRET, HS256)
+        Auth --> API : JWT token string
+
+        API -> API : determine redirect URL\nby user.role
+
+        alt role == admin
+            API --> Browser : 303 → /admin\nSet-Cookie: access_token (HttpOnly)
+        else role == teacher
+            API --> Browser : 303 → /teacher\nSet-Cookie: access_token (HttpOnly)
+        else role == student
+            alt ?next= provided
+                API --> Browser : 303 → {next}\nSet-Cookie: access_token (HttpOnly)
+            else
+                API --> Browser : 303 → /student\nSet-Cookie: access_token (HttpOnly)
+            end
+        end
+    end
+end
+
+@enduml
