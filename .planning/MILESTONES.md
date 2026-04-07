@@ -1,5 +1,17 @@
 # Milestones
 
+## v1.1 Physical Devices (Shipped: 2026-04-07)
+
+**Phases completed:** 2 phases, 3 plans, 5 tasks
+
+**Key accomplishments:**
+
+- Replaced SERVER_IP with BASE_URL across config, scheduler, and env files for ngrok-ready token URL generation
+- Production Docker Compose topology with ngrok tunnel to server:8000, dummy clients removed, one dev client commented out
+- Production ESP32 firmware with MQTT registration, 30s heartbeat, NFC tag writing from token URLs, and GPIO 13 LED indicator
+
+---
+
 ## v1.0 MVP (Shipped: 2026-03-31)
 
 **Phases completed:** 7 phases, 18 plans, 31 tasks
