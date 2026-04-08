@@ -38,7 +38,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 **Milestone Goal:** Quality-of-life improvements -- student visibility, late tracking, auth polish, and bulk data import.
 
 - [x] **Phase 10: Cleanup** - Remove dead code and adjust token/session config for better UX (completed 2026-04-08)
-- [ ] **Phase 11: Password Management** - Self-service password change and admin password reset
+- [x] **Phase 11: Password Management** - Self-service password change and admin password reset (completed 2026-04-08)
 - [ ] **Phase 12: Late Threshold** - Three-state attendance model with configurable late detection
 - [ ] **Phase 13: Student Dashboard** - Attendance summary and detailed lesson history for students
 - [ ] **Phase 14: CSV Import** - Bulk user and schedule creation via template-based CSV upload
@@ -68,7 +68,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 11-01-PLAN.md — Self-service password change (all roles)
-- [ ] 11-02-PLAN.md — Admin password reset with dialog UI
+- [x] 11-02-PLAN.md — Admin password reset with dialog UI
 **UI hint**: yes
 
 ### Phase 12: Late Threshold
@@ -130,7 +130,7 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 8. Network & Public Access | v1.1 | 2/2 | Complete | 2026-04-02 |
 | 9. ESP32 Firmware | v1.1 | 1/1 | Complete | 2026-04-02 |
 | 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
-| 11. Password Management | v1.2 | 1/2 | In Progress|  |
+| 11. Password Management | v1.2 | 2/2 | Complete   | 2026-04-08 |
 | 12. Late Threshold | v1.2 | 0/? | Not started | - |
 | 13. Student Dashboard | v1.2 | 0/? | Not started | - |
 | 14. CSV Import | v1.2 | 0/? | Not started | - |

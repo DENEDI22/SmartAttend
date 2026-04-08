@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: QOL Improvements
-status: Ready to execute
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-04-08T07:31:17.007Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-04-08T07:36:22.552Z"
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -47,6 +47,7 @@ Recent decisions affecting current work:
 - [Phase 10-cleanup]: Token rotation changed from 60s to 90s to reduce MQTT churn
 - [Phase 10-cleanup]: Student JWT extended to 30 days for persistent login across browser restarts
 - [Phase 11]: Validation order: length first, then match, then current password verify (fail fast)
+- [Phase 11]: Admin password reset uses native HTML dialog with crypto.getRandomValues() for password generation
 
 ### Pending Todos
 
@@ -60,6 +61,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-08T07:31:17.003Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-04-08T07:36:22.545Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: None
