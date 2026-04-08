@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: QOL Improvements
-status: Ready to plan
-stopped_at: Phase 11 context gathered
-last_updated: "2026-04-08T07:19:32.424Z"
+status: Ready to execute
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-04-08T07:31:17.007Z"
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device -- the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 10 — cleanup
+**Current focus:** Phase 11 — password-management
 
 ## Current Position
 
-Phase: 11
-Plan: Not started
+Phase: 11 (password-management) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Recent decisions affecting current work:
 - [v1.2 setup]: CSV import uses validate-then-commit with atomic transactions
 - [Phase 10-cleanup]: Token rotation changed from 60s to 90s to reduce MQTT churn
 - [Phase 10-cleanup]: Student JWT extended to 30 days for persistent login across browser restarts
+- [Phase 11]: Validation order: length first, then match, then current password verify (fail fast)
 
 ### Pending Todos
 
@@ -59,6 +60,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-08T07:19:32.419Z
-Stopped at: Phase 11 context gathered
-Resume file: .planning/phases/11-password-management/11-CONTEXT.md
+Last session: 2026-04-08T07:31:17.003Z
+Stopped at: Completed 11-01-PLAN.md
+Resume file: None

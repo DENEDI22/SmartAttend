@@ -15,7 +15,7 @@ Requirements for QOL Improvements milestone. Each maps to roadmap phases.
 
 ### Password Management
 
-- [ ] **PWD-01**: User can change their own password (current + new + confirm)
+- [x] **PWD-01**: User can change their own password (current + new + confirm)
 - [ ] **PWD-02**: Admin can reset any user's password without knowing the old one
 
 ### Late Tracking
@@ -77,7 +77,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLN-01 | Phase 10 | Complete |
 | CLN-02 | Phase 10 | Complete |
 | CLN-03 | Phase 10 | Complete |
-| PWD-01 | Phase 11 | Pending |
+| PWD-01 | Phase 11 | Complete |
 | PWD-02 | Phase 11 | Pending |
 | LATE-01 | Phase 12 | Pending |
 | LATE-02 | Phase 12 | Pending |
