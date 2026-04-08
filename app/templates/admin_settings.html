@@ -1,0 +1,20 @@
+{% extends "admin_base.html" %}
+{% block title %}Einstellungen — SmartAttend{% endblock %}
+{% block admin_content %}
+<hgroup>
+  <h1>Einstellungen</h1>
+  <p>Globale Systemeinstellungen</p>
+</hgroup>
+
+<article>
+  <h3>Versp&auml;tung</h3>
+  <form method="post" action="/admin/settings">
+    <label>
+      Standard-Versp&auml;tungsschwelle (Minuten)
+      <input type="number" name="late_threshold_minutes" value="{{ late_threshold_minutes }}" min="1" max="120" required>
+    </label>
+    <small>Gilt f&uuml;r alle Stunden ohne individuelle Einstellung. Sch&uuml;ler, die nach Unterrichtsbeginn + Schwelle einchecken, werden als &bdquo;Versp&auml;tet&ldquo; markiert.</small>
+    <button type="submit" style="margin-top: 1rem;">Speichern</button>
+  </form>
+</article>
+{% endblock %}
