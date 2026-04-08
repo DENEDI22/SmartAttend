@@ -80,9 +80,10 @@ Plans:
   2. Admin or teacher can set a per-schedule-entry late threshold that overrides the global default
   3. Teacher lesson roster shows students who checked in after the threshold as "Verspaetet" (distinct from Anwesend and Abwesend)
   4. Teacher dashboard shows late count alongside present and absent counts for each lesson
-**Plans**: 1 plan
+**Plans**: 2 plans
 Plans:
-- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
+- [ ] 12-01-PLAN.md — SystemSetting model, admin settings page, ScheduleEntry late column, schedule form field
+- [ ] 12-02-PLAN.md — Three-state classification in roster/dashboard/CSV, colored template display
 **UI hint**: yes
 
 ### Phase 13: Student Dashboard
@@ -131,6 +132,6 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 9. ESP32 Firmware | v1.1 | 1/1 | Complete | 2026-04-02 |
 | 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
 | 11. Password Management | v1.2 | 2/2 | Complete    | 2026-04-08 |
-| 12. Late Threshold | v1.2 | 0/? | Not started | - |
+| 12. Late Threshold | v1.2 | 0/2 | Not started | - |
 | 13. Student Dashboard | v1.2 | 0/? | Not started | - |
 | 14. CSV Import | v1.2 | 0/? | Not started | - |
