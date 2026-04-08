@@ -5,7 +5,7 @@
 
 <hgroup>
   <h1>Anwesenheit {{ class_name }}</h1>
-  <p>{{ room }} -- {{ start_time }} bis {{ end_time }} -- Anwesend: {{ checked_in }}/{{ expected }}</p>
+  <p>{{ room }} -- {{ start_time }} bis {{ end_time }} -- Anwesend: {{ checked_in }}/{{ expected }}{% if late_count %} ({{ late_count }} verspaetet){% endif %}</p>
 </hgroup>
 
 <figure>
@@ -25,8 +25,10 @@
         <td>{{ row.first_name }}</td>
         {% if row.status == "Anwesend" %}
         <td style="color: #2e7d32">{{ row.status }}</td>
+        {% elif row.status == "Verspaetet" %}
+        <td style="color: #e65100">{{ row.status }}</td>
         {% else %}
-        <td style="color: var(--pico-muted-color)">{{ row.status }}</td>
+        <td style="color: var(--pico-del-color)">{{ row.status }}</td>
         {% endif %}
         <td>{{ row.time or "--" }}</td>
       </tr>
