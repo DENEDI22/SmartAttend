@@ -60,7 +60,7 @@ async def login_post(
 
     # Determine expiry by role — D-03
     if user.role == "student":
-        expires = timedelta(hours=1)
+        expires = timedelta(days=30)
     else:
         expires = timedelta(hours=8)
 
