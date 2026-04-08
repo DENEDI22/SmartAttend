@@ -53,7 +53,9 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
   1. No lux-related code exists in MQTT handlers, models, dummy client, or templates
   2. Check-in tokens rotate every 90 seconds instead of 60 seconds
   3. Student can close browser, reopen days later, and still be logged in without re-entering credentials
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
 
 ### Phase 11: Password Management
 **Goal**: All users can change their own password; admins can reset any user's password
@@ -63,7 +65,9 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
   1. User can change their password by entering current password, new password, and confirmation
   2. User sees an error if current password is wrong or new passwords do not match
   3. Admin can reset any user's password from the user management page without knowing the old password
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
 **UI hint**: yes
 
 ### Phase 12: Late Threshold
@@ -75,7 +79,9 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
   2. Admin or teacher can set a per-schedule-entry late threshold that overrides the global default
   3. Teacher lesson roster shows students who checked in after the threshold as "Verspaetet" (distinct from Anwesend and Abwesend)
   4. Teacher dashboard shows late count alongside present and absent counts for each lesson
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
 **UI hint**: yes
 
 ### Phase 13: Student Dashboard
@@ -86,7 +92,9 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
   1. Student sees a summary showing total lessons, attended, missed, late, and attendance percentage
   2. Student sees a detailed lesson list with date, class, time, room, and status (Anwesend / Verspaetet / Abwesend)
   3. Late status on the student dashboard matches the teacher's view for the same lesson
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
 **UI hint**: yes
 
 ### Phase 14: CSV Import
@@ -99,7 +107,9 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
   3. Admin can confirm user import and only valid rows are committed to the database
   4. Admin can upload a schedule CSV and see a validation preview showing overlap and foreign-key errors per row
   5. Admin can confirm schedule import and only valid rows are committed to the database
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
 **UI hint**: yes
 
 ## Progress
