@@ -96,7 +96,7 @@ Plans:
   3. Late status on the student dashboard matches the teacher's view for the same lesson
 **Plans**: 1 plan
 Plans:
-- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
+- [ ] 13-01-PLAN.md — Student dashboard with attendance summary stats and grouped lesson history
 **UI hint**: yes
 
 ### Phase 14: CSV Import
@@ -133,5 +133,5 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
 | 11. Password Management | v1.2 | 2/2 | Complete    | 2026-04-08 |
 | 12. Late Threshold | v1.2 | 1/2 | Complete    | 2026-04-08 |
-| 13. Student Dashboard | v1.2 | 0/? | Not started | - |
+| 13. Student Dashboard | v1.2 | 0/1 | Not started | - |
 | 14. CSV Import | v1.2 | 0/? | Not started | - |
