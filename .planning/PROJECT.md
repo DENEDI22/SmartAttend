@@ -10,12 +10,12 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ## Current State
 
-**v1.2 QOL Improvements in progress.** Phase 12 (Late Threshold) complete — three-state attendance classification (Anwesend/Verspaetet/Abwesend) with configurable thresholds.
+**v1.2 QOL Improvements in progress.** Phase 13 (Student Dashboard) complete — attendance summary stats and month-grouped lesson history for students.
 
 - Tech stack: FastAPI + Jinja2 + SQLAlchemy + SQLite + Mosquitto + paho-mqtt + APScheduler
 - Docker Compose stack with 3 containers (server, mqtt, ngrok)
 - ESP32 firmware at `ESP32THINGS/SmartAttend/SmartAttend.ino` (269 lines)
-- 12 phases shipped across 2 milestones + v1.2 QOL
+- 13 phases shipped across 2 milestones + v1.2 QOL
 - Timeline: 2026-03-27 → present
 
 ## Requirements
@@ -38,7 +38,7 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ### Active
 
-- [ ] Student dashboard with attendance summary and detailed lesson list
+- ✓ Student dashboard with attendance summary and detailed lesson list — v1.2 Phase 13
 - ✓ Password change (self-service for all users + admin reset) — v1.2 Phase 11
 - ✓ "Verspätet" late threshold — global default with per-schedule-entry override — v1.2 Phase 12
 - ✓ Lux reading feature removed — v1.2 Phase 10
@@ -118,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-08 after Phase 11 Password Management complete*
+*Last updated: 2026-04-08 after Phase 13 Student Dashboard complete*
