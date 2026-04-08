@@ -47,7 +47,6 @@ def test_subscribe_topics(override_settings):
     mock_client.subscribe.assert_called_once_with([
         ("devices/register", 0),
         ("devices/+/status", 0),
-        ("sensors/+/lux", 0),
     ])
 
 
@@ -101,20 +100,6 @@ def test_heartbeat_unknown_device_auto_registers(db_session, patch_session):
     assert device.is_enabled is False
     assert device.is_online is True
     assert device.last_seen is not None
-
-
-def test_lux_update(db_session, patch_session):
-    """Lux message updates device.last_lux."""
-    from app.services.mqtt import _handle_lux
-
-    device = Device(device_id="e101", is_enabled=False, is_online=False)
-    db_session.add(device)
-    db_session.commit()
-
-    _handle_lux("e101", "450.5")
-
-    db_session.refresh(device)
-    assert device.last_lux == 450.5
 
 
 def test_publish_token(override_settings):

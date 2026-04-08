@@ -19,7 +19,6 @@ def _reload_main(monkeypatch, **env_overrides):
         "ROOM": "E101",
         "MQTT_BROKER": "localhost",
         "MQTT_PORT": "1883",
-        "LUX_VALUE": "400",
     }
     defaults.update(env_overrides)
     for k, v in defaults.items():
@@ -43,13 +42,11 @@ class TestEnvConfig:
             ROOM="R999",
             MQTT_BROKER="broker.local",
             MQTT_PORT="9999",
-            LUX_VALUE="123.5",
         )
         assert mod.DEVICE_ID == "test-dev"
         assert mod.ROOM == "R999"
         assert mod.MQTT_BROKER == "broker.local"
         assert mod.MQTT_PORT == 9999
-        assert mod.LUX_VALUE == 123.5
 
 
 class TestRegistrationOnConnect:
@@ -121,39 +118,6 @@ class TestHeartbeat:
         payload = call_args[0][1] if len(call_args[0]) > 1 else call_args.kwargs.get("payload")
         assert topic == "devices/e101/status"
         assert payload == "online"
-
-
-class TestLux:
-    """DUMMY-03: Publish lux reading every 60s."""
-
-    def test_lux_publishes(self, monkeypatch):
-        mod = _reload_main(monkeypatch, DEVICE_ID="e101", LUX_VALUE="400")
-        mock_client = MagicMock()
-        mock_client.is_connected.return_value = True
-
-        # Create a stop_event that allows one iteration then stops
-        stop = threading.Event()
-        call_count = 0
-
-        def limited_wait(timeout=None):
-            nonlocal call_count
-            call_count += 1
-            if call_count >= 1:
-                stop.set()
-            return stop.is_set()
-
-        stop.wait = limited_wait
-        monkeypatch.setattr(mod, "stop_event", stop)
-
-        mod.lux_loop(mock_client)
-
-        mock_client.publish.assert_called_once()
-        call_args = mock_client.publish.call_args
-        topic = call_args[0][0]
-        payload = call_args[0][1] if len(call_args[0]) > 1 else call_args.kwargs.get("payload")
-        assert topic == "sensors/e101/lux"
-        # Payload must be parseable as float
-        assert float(payload) == 400.0
 
 
 class TestTokenUrl:
