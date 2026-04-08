@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: QOL Improvements
 status: Ready to plan
-stopped_at: Phase 12 context gathered
-last_updated: "2026-04-08T08:21:53.327Z"
+stopped_at: Completed 12-02-PLAN.md
+last_updated: "2026-04-08T09:03:05.568Z"
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Students can check in to a lesson by tapping their phone on the classroom NFC device -- the entire flow from tap to attendance record must work reliably.
-**Current focus:** Phase 11 — password-management
+**Current focus:** Phase 12 — late-threshold
 
 ## Current Position
 
-Phase: 12
+Phase: 13
 Plan: Not started
 
 ## Performance Metrics
@@ -48,6 +48,8 @@ Recent decisions affecting current work:
 - [Phase 10-cleanup]: Student JWT extended to 30 days for persistent login across browser restarts
 - [Phase 11]: Validation order: length first, then match, then current password verify (fail fast)
 - [Phase 11]: Admin password reset uses native HTML dialog with crypto.getRandomValues() for password generation
+- [Phase 12-late-threshold]: SystemSetting uses key-value pattern with string values for flexibility
+- [Phase 12-late-threshold]: Verspaetet students count toward checked_in total
 
 ### Pending Todos
 
@@ -61,6 +63,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-08T08:21:53.323Z
-Stopped at: Phase 12 context gathered
-Resume file: .planning/phases/12-late-threshold/12-CONTEXT.md
+Last session: 2026-04-08T09:01:33.599Z
+Stopped at: Completed 12-02-PLAN.md
+Resume file: None

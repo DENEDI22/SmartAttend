@@ -20,10 +20,10 @@ Requirements for QOL Improvements milestone. Each maps to roadmap phases.
 
 ### Late Tracking
 
-- [ ] **LATE-01**: Global default late threshold configurable in minutes
-- [ ] **LATE-02**: Per-schedule-entry late threshold override (NULL = use global default)
-- [ ] **LATE-03**: Teacher lesson roster shows "Verspaetet" as third status when student checked in after threshold
-- [ ] **LATE-04**: Teacher dashboard shows late count alongside attendance count
+- [x] **LATE-01**: Global default late threshold configurable in minutes
+- [x] **LATE-02**: Per-schedule-entry late threshold override (NULL = use global default)
+- [x] **LATE-03**: Teacher lesson roster shows "Verspaetet" as third status when student checked in after threshold
+- [x] **LATE-04**: Teacher dashboard shows late count alongside attendance count
 
 ### Student Dashboard
 
@@ -79,10 +79,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLN-03 | Phase 10 | Complete |
 | PWD-01 | Phase 11 | Complete |
 | PWD-02 | Phase 11 | Complete |
-| LATE-01 | Phase 12 | Pending |
-| LATE-02 | Phase 12 | Pending |
-| LATE-03 | Phase 12 | Pending |
-| LATE-04 | Phase 12 | Pending |
+| LATE-01 | Phase 12 | Complete |
+| LATE-02 | Phase 12 | Complete |
+| LATE-03 | Phase 12 | Complete |
+| LATE-04 | Phase 12 | Complete |
 | STUD-01 | Phase 13 | Pending |
 | STUD-02 | Phase 13 | Pending |
 | CSV-01 | Phase 14 | Pending |

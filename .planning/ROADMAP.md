@@ -39,7 +39,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 
 - [x] **Phase 10: Cleanup** - Remove dead code and adjust token/session config for better UX (completed 2026-04-08)
 - [x] **Phase 11: Password Management** - Self-service password change and admin password reset (completed 2026-04-08)
-- [ ] **Phase 12: Late Threshold** - Three-state attendance model with configurable late detection
+- [x] **Phase 12: Late Threshold** - Three-state attendance model with configurable late detection (completed 2026-04-08)
 - [ ] **Phase 13: Student Dashboard** - Attendance summary and detailed lesson history for students
 - [ ] **Phase 14: CSV Import** - Bulk user and schedule creation via template-based CSV upload
 
@@ -82,7 +82,7 @@ Plans:
   4. Teacher dashboard shows late count alongside present and absent counts for each lesson
 **Plans**: 2 plans
 Plans:
-- [ ] 12-01-PLAN.md — SystemSetting model, admin settings page, ScheduleEntry late column, schedule form field
+- [x] 12-01-PLAN.md — SystemSetting model, admin settings page, ScheduleEntry late column, schedule form field
 - [ ] 12-02-PLAN.md — Three-state classification in roster/dashboard/CSV, colored template display
 **UI hint**: yes
 
@@ -132,6 +132,6 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 9. ESP32 Firmware | v1.1 | 1/1 | Complete | 2026-04-02 |
 | 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
 | 11. Password Management | v1.2 | 2/2 | Complete    | 2026-04-08 |
-| 12. Late Threshold | v1.2 | 0/2 | Not started | - |
+| 12. Late Threshold | v1.2 | 1/2 | Complete    | 2026-04-08 |
 | 13. Student Dashboard | v1.2 | 0/? | Not started | - |
 | 14. CSV Import | v1.2 | 0/? | Not started | - |
