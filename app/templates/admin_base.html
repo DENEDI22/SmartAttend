@@ -24,4 +24,5 @@
 <p role="alert" style="color: var(--pico-del-color)">{{ request.query_params.get('error') }}</p>
 {% endif %}
 {% block admin_content %}{% endblock %}
+{% include "_password_change.html" %}
 {% endblock %}

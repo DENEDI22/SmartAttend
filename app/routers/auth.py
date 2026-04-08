@@ -9,7 +9,12 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.dependencies import get_current_user, require_role
 from app.models.user import User
-from app.services.auth import authenticate_user, create_access_token
+from app.services.auth import (
+    authenticate_user,
+    create_access_token,
+    get_password_hash,
+    verify_password,
+)
 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -131,6 +136,54 @@ async def student_landing(
 
 # Test-only route for require_role integration tests — AUTH-06
 # This route is harmless in production (admin dashboard is Phase 3)
+@router.post("/auth/password")
+async def change_password(
+    current_password: str = Form(...),
+    new_password: str = Form(...),
+    confirm_password: str = Form(...),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Self-service password change for all roles (PWD-01).
+
+    Validates current password, new password length, and confirmation match.
+    Redirects back to the user's role-based dashboard with msg= or error= param.
+    """
+    # Determine redirect base by role
+    role_redirects = {"admin": "/admin", "teacher": "/teacher", "student": "/student"}
+    base = role_redirects.get(user.role, "/student")
+
+    # Validate new password length
+    if len(new_password) < 8:
+        return RedirectResponse(
+            url=f"{base}?error=Neues+Passwort+muss+mindestens+8+Zeichen+lang+sein.",
+            status_code=303,
+        )
+
+    # Validate passwords match
+    if new_password != confirm_password:
+        return RedirectResponse(
+            url=f"{base}?error=Neue+Passwoerter+stimmen+nicht+ueberein.",
+            status_code=303,
+        )
+
+    # Validate current password
+    if not verify_password(current_password, user.password_hash):
+        return RedirectResponse(
+            url=f"{base}?error=Aktuelles+Passwort+ist+falsch.",
+            status_code=303,
+        )
+
+    # Update password
+    user.password_hash = get_password_hash(new_password)
+    db.commit()
+
+    return RedirectResponse(
+        url=f"{base}?msg=Passwort+erfolgreich+geaendert.",
+        status_code=303,
+    )
+
+
 @router.get("/auth/admin-only-test")
 async def admin_only_test(user: User = Depends(require_role("admin"))):
     """Exists only to test require_role('admin') in integration tests."""
