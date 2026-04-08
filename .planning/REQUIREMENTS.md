@@ -1,7 +1,7 @@
 # Requirements: SmartAttend
 
 **Defined:** 2026-04-08
-**Core Value:** Students can check in to a lesson by tapping their phone on the classroom NFC device — the entire flow from tap to attendance record must work reliably.
+**Core Value:** Students can check in to a lesson by tapping their phone on the classroom NFC device -- the entire flow from tap to attendance record must work reliably.
 
 ## v1.2 Requirements
 
@@ -22,13 +22,13 @@ Requirements for QOL Improvements milestone. Each maps to roadmap phases.
 
 - [ ] **LATE-01**: Global default late threshold configurable in minutes
 - [ ] **LATE-02**: Per-schedule-entry late threshold override (NULL = use global default)
-- [ ] **LATE-03**: Teacher lesson roster shows "Verspätet" as third status when student checked in after threshold
+- [ ] **LATE-03**: Teacher lesson roster shows "Verspaetet" as third status when student checked in after threshold
 - [ ] **LATE-04**: Teacher dashboard shows late count alongside attendance count
 
 ### Student Dashboard
 
 - [ ] **STUD-01**: Student can view attendance summary (total lessons, attended, missed, late, percentage)
-- [ ] **STUD-02**: Student can view detailed lesson list with date, class, time, room, and status (Anwesend/Verspätet/Abwesend)
+- [ ] **STUD-02**: Student can view detailed lesson list with date, class, time, room, and status (Anwesend/Verspaetet/Abwesend)
 
 ### CSV Import
 
@@ -74,13 +74,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| CLN-01 | Phase 10 | Pending |
+| CLN-02 | Phase 10 | Pending |
+| CLN-03 | Phase 10 | Pending |
+| PWD-01 | Phase 11 | Pending |
+| PWD-02 | Phase 11 | Pending |
+| LATE-01 | Phase 12 | Pending |
+| LATE-02 | Phase 12 | Pending |
+| LATE-03 | Phase 12 | Pending |
+| LATE-04 | Phase 12 | Pending |
+| STUD-01 | Phase 13 | Pending |
+| STUD-02 | Phase 13 | Pending |
+| CSV-01 | Phase 14 | Pending |
+| CSV-02 | Phase 14 | Pending |
+| CSV-03 | Phase 14 | Pending |
+| CSV-04 | Phase 14 | Pending |
+| CSV-05 | Phase 14 | Pending |
+| CSV-06 | Phase 14 | Pending |
 
 **Coverage:**
-- v1.2 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15 ⚠️
+- v1.2 requirements: 17 total
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-08*
-*Last updated: 2026-04-08 after initial definition*
+*Last updated: 2026-04-08 after roadmap creation*
