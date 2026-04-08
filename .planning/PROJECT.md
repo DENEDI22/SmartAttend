@@ -10,14 +10,13 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ## Current State
 
-**v1.1 Physical Devices shipped 2026-04-07.** Server exposed via ngrok, ESP32 firmware deployed and verified on hardware.
+**v1.2 QOL Improvements in progress.** Phase 10 (Cleanup) complete — lux dead code removed, token rotation 90s, student session 30 days.
 
 - Tech stack: FastAPI + Jinja2 + SQLAlchemy + SQLite + Mosquitto + paho-mqtt + APScheduler
 - Docker Compose stack with 3 containers (server, mqtt, ngrok)
 - ESP32 firmware at `ESP32THINGS/SmartAttend/SmartAttend.ino` (269 lines)
-- 75 passing tests + 1 xfailed
-- 9 phases shipped across 2 milestones (21 plans, 36 tasks)
-- Timeline: 2026-03-27 → 2026-04-07 (12 days)
+- 10 phases shipped across 2 milestones + v1.2 cleanup
+- Timeline: 2026-03-27 → present
 
 ## Requirements
 
@@ -42,9 +41,9 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 - [ ] Student dashboard with attendance summary and detailed lesson list
 - [ ] Password change (self-service for all users + admin reset for any user)
 - [ ] "Verspätet" late threshold — global default with per-schedule-entry override
-- [ ] Remove lux reading feature
-- [ ] Extend check-in token validity from 60s to 90s
-- [ ] Remove JWT 1h expiry for students (stay logged in until logout)
+- ✓ Lux reading feature removed — v1.2 Phase 10
+- ✓ Check-in token rotation extended to 90s — v1.2 Phase 10
+- ✓ Student JWT session extended to 30 days — v1.2 Phase 10
 - [ ] CSV import for Users and Schedule entries (template + upload + validation preview)
 
 ## Current Milestone: v1.2 QOL Improvements
@@ -119,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-08 after v1.2 milestone started*
+*Last updated: 2026-04-08 after Phase 10 Cleanup complete*
