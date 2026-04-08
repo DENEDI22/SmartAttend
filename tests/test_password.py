@@ -2,7 +2,8 @@
 import pytest
 from urllib.parse import urlparse, parse_qs
 
-from app.services.auth import verify_password
+from app.models.user import User
+from app.services.auth import get_password_hash, verify_password
 
 
 class TestPasswordChangeHappyPath:

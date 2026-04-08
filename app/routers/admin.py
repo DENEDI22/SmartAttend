@@ -222,6 +222,33 @@ async def user_deactivate(
     return RedirectResponse(url="/admin/users?msg=Benutzer+deaktiviert.", status_code=303)
 
 
+@router.post("/users/{user_id}/reset-password")
+async def reset_password(
+    user_id: int,
+    new_password: str = Form(...),
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Reset a user's password (admin only) -- PWD-02."""
+    target = db.query(User).filter(User.id == user_id).first()
+    if not target:
+        return RedirectResponse(
+            url="/admin/users?error=Benutzer+nicht+gefunden.",
+            status_code=303,
+        )
+    if len(new_password) < 8:
+        return RedirectResponse(
+            url="/admin/users?error=Neues+Passwort+muss+mindestens+8+Zeichen+lang+sein.",
+            status_code=303,
+        )
+    target.password_hash = get_password_hash(new_password)
+    db.commit()
+    return RedirectResponse(
+        url=f"/admin/users?msg=Passwort+fuer+{target.first_name}+{target.last_name}+zurueckgesetzt.",
+        status_code=303,
+    )
+
+
 @router.post("/users/update")
 async def users_update(
     request: Request,
