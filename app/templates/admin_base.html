@@ -10,6 +10,7 @@
   <ul>
     <li><a href="/admin/devices" {% if active_page == 'devices' %}aria-current="page"{% endif %}>Geräte</a></li>
     <li><a href="/admin/users" {% if active_page == 'users' %}aria-current="page"{% endif %}>Benutzer</a></li>
+    <li><a href="/admin/settings" {% if active_page == 'settings' %}aria-current="page"{% endif %}>Einstellungen</a></li>
     <li>
       <form method="post" action="/auth/logout" style="margin: 0;">
         <button type="submit" class="outline secondary" style="margin: 0; padding: 0.5rem 1rem;">Abmelden</button>

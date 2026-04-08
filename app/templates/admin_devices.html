@@ -92,6 +92,7 @@
           <th>Lehrer</th>
           <th>Tag</th>
           <th>Zeitraum</th>
+          <th>Versp&auml;tung</th>
           <th></th>
         </tr>
       </thead>
@@ -102,6 +103,7 @@
           <td>{{ entry.teacher_name }}</td>
           <td>{{ entry.weekday_name }}</td>
           <td>{{ entry.start_time }} &ndash; {{ entry.end_time }}</td>
+          <td>{{ entry.late_threshold_minutes or 'Standard' }}</td>
           <td>
             <form method="post" action="/admin/schedule/{{ entry.id }}/delete"
                   onsubmit="return confirm('Eintrag l\u00f6schen: Soll dieser Stundenplaneintrag wirklich gel\u00f6scht werden?')"
@@ -158,6 +160,10 @@
           <input type="time" name="end_time" required>
         </label>
       </div>
+      <label>
+        Versp&auml;tung (Min.) <small>&mdash; leer = globaler Standard</small>
+        <input type="number" name="late_threshold_minutes" min="1" max="120" placeholder="Standard">
+      </label>
       <small data-conflict-error style="color: var(--pico-del-color); display: block; margin-bottom: 8px;"></small>
       <button type="submit" data-add-btn>Hinzuf&uuml;gen</button>
     </form>

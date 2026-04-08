@@ -14,3 +14,4 @@ class ScheduleEntry(Base):
     weekday: Mapped[int] = mapped_column(Integer, nullable=False)     # 0=Monday ... 6=Sunday
     start_time: Mapped[time] = mapped_column(Time, nullable=False)
     end_time: Mapped[time] = mapped_column(Time, nullable=False)
+    late_threshold_minutes: Mapped[int | None] = mapped_column(Integer, nullable=True, default=None)

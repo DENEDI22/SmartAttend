@@ -11,6 +11,7 @@ from app.dependencies import require_role
 from app.models.device import Device
 from app.models.schedule_entry import ScheduleEntry
 from app.models.school_class import SchoolClass
+from app.models.system_setting import SystemSetting
 from app.models.user import User
 from app.services.auth import get_password_hash
 
@@ -75,6 +76,7 @@ async def devices_page(
                 "weekday_name": WEEKDAY_NAMES[entry.weekday] if 0 <= entry.weekday <= 6 else str(entry.weekday),
                 "start_time": entry.start_time.strftime("%H:%M"),
                 "end_time": entry.end_time.strftime("%H:%M"),
+                "late_threshold_minutes": entry.late_threshold_minutes,
             })
         device_schedules[device.id] = enriched
 
@@ -293,10 +295,16 @@ async def schedule_add(
     weekday: int = Form(...),
     start_time: str = Form(...),
     end_time: str = Form(...),
+    late_threshold_minutes: str | None = Form(None),
     user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
     """Add a schedule entry with overlap detection (ADMIN-08, ADMIN-09)."""
+    # Convert empty string to None for optional late threshold
+    late_thresh = None
+    if late_threshold_minutes and late_threshold_minutes.strip():
+        late_thresh = int(late_threshold_minutes)
+
     st = dt_time.fromisoformat(start_time)
     et = dt_time.fromisoformat(end_time)
 
@@ -335,6 +343,7 @@ async def schedule_add(
         weekday=weekday,
         start_time=st,
         end_time=et,
+        late_threshold_minutes=late_thresh,
     )
     db.add(entry)
     db.commit()
@@ -380,3 +389,43 @@ async def api_check_conflict(
             ),
         }
     return {"conflict": False}
+
+
+# ── Settings (LATE-01, LATE-02) ──────────────────────────────────────
+
+
+@router.get("/settings")
+async def settings_page(
+    request: Request,
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Admin settings page with global late threshold."""
+    late_threshold_minutes = SystemSetting.get_value(db, "late_threshold_minutes", "10")
+    return templates.TemplateResponse(
+        request=request,
+        name="admin_settings.html",
+        context={
+            "user": user,
+            "late_threshold_minutes": late_threshold_minutes,
+            "active_page": "settings",
+        },
+    )
+
+
+@router.post("/settings")
+async def settings_save(
+    request: Request,
+    late_threshold_minutes: int = Form(...),
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Save global settings."""
+    if late_threshold_minutes < 1 or late_threshold_minutes > 120:
+        return RedirectResponse(
+            url="/admin/settings?error=Wert+muss+zwischen+1+und+120+liegen.",
+            status_code=303,
+        )
+    SystemSetting.set_value(db, "late_threshold_minutes", str(late_threshold_minutes))
+    db.commit()
+    return RedirectResponse(url="/admin/settings?msg=Einstellungen+gespeichert.", status_code=303)
