@@ -39,7 +39,26 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ### Active
 
-(None — next milestone not yet planned)
+- [ ] Student dashboard with attendance summary and detailed lesson list
+- [ ] Password change (self-service for all users + admin reset for any user)
+- [ ] "Verspätet" late threshold — global default with per-schedule-entry override
+- [ ] Remove lux reading feature
+- [ ] Extend check-in token validity from 60s to 90s
+- [ ] Remove JWT 1h expiry for students (stay logged in until logout)
+- [ ] CSV import for Users and Schedule entries (template + upload + validation preview)
+
+## Current Milestone: v1.2 QOL Improvements
+
+**Goal:** Quality-of-life improvements to attendance tracking — student visibility, late tracking, auth polish, and bulk data import.
+
+**Target features:**
+- Student dashboard with attendance summary stats and detailed lesson list (including late status)
+- Password change (self-service for all users + admin reset)
+- "Verspätet" late threshold — global default with per-schedule-entry override; shown on teacher and student dashboards
+- Remove lux reading feature (MQTT handler, dummy client code)
+- Extend check-in token validity from 60s to 90s
+- Remove JWT 1h expiry for students — stay logged in until explicit logout
+- CSV import for Users and Schedule entries with template download, upload, validation preview, and error highlighting
 
 ### Out of Scope
 
@@ -100,4 +119,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-07 after v1.1 milestone shipped*
+*Last updated: 2026-04-08 after v1.2 milestone started*
