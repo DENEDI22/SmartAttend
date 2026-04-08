@@ -56,14 +56,21 @@
           <td>{{ "Aktiv" if u.is_active else "Inaktiv" }}</td>
           <td>
             {% if u.is_active and u.id != user.id %}
-            <form method="post" action="/admin/users/{{ u.id }}/deactivate"
-                  onsubmit="return confirm('Benutzer deaktivieren: Soll dieser Benutzer wirklich deaktiviert werden? Anwesenheitsdaten bleiben erhalten.')"
-                  style="margin: 0;">
-              <button type="submit" class="outline secondary"
-                      style="margin: 0; padding: 4px 12px; color: var(--pico-del-color); border-color: var(--pico-del-color);">
-                Deaktivieren
+            <div style="display: flex; gap: 4px; align-items: center;">
+              <button type="button" class="outline"
+                      style="margin: 0; padding: 4px 12px;"
+                      onclick="openResetDialog({{ u.id }}, '{{ u.first_name }} {{ u.last_name }}')">
+                Passwort
               </button>
-            </form>
+              <form method="post" action="/admin/users/{{ u.id }}/deactivate"
+                    onsubmit="return confirm('Benutzer deaktivieren: Soll dieser Benutzer wirklich deaktiviert werden? Anwesenheitsdaten bleiben erhalten.')"
+                    style="margin: 0;">
+                <button type="submit" class="outline secondary"
+                        style="margin: 0; padding: 4px 12px; color: var(--pico-del-color); border-color: var(--pico-del-color);">
+                  Deaktivieren
+                </button>
+              </form>
+            </div>
             {% endif %}
           </td>
         </tr>
@@ -88,6 +95,36 @@
   <p>Erstellen Sie den ersten Benutzer über das Formular unten.</p>
 </article>
 {% endif %}
+
+<dialog id="reset-dialog">
+  <article style="max-width: 400px;">
+    <header>
+      <button type="button" aria-label="Close" rel="prev"
+              onclick="document.getElementById('reset-dialog').close()"></button>
+      <h3>Passwort zuruecksetzen</h3>
+      <p id="reset-dialog-subtitle"></p>
+    </header>
+    <form id="reset-form" method="post" action="">
+      <label>
+        Neues Passwort
+        <input type="text" name="new_password" id="reset-password-input"
+               required minlength="8" autocomplete="off">
+      </label>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button type="button" class="outline" onclick="generatePassword()"
+                style="white-space: nowrap;">
+          Generieren
+        </button>
+        <small id="generated-hint" style="color: #2e7d32; display: none;">
+          Bitte notieren Sie das Passwort!
+        </small>
+      </div>
+      <footer>
+        <button type="submit">Zuruecksetzen</button>
+      </footer>
+    </form>
+  </article>
+</dialog>
 
 <article>
   <h2>Neuer Benutzer</h2>
@@ -132,4 +169,32 @@
     <button type="submit">Benutzer erstellen</button>
   </form>
 </article>
+
+<script>
+function openResetDialog(userId, userName) {
+  const dialog = document.getElementById('reset-dialog');
+  const form = document.getElementById('reset-form');
+  const subtitle = document.getElementById('reset-dialog-subtitle');
+  const input = document.getElementById('reset-password-input');
+  const hint = document.getElementById('generated-hint');
+
+  form.action = '/admin/users/' + userId + '/reset-password';
+  subtitle.textContent = userName;
+  input.value = '';
+  hint.style.display = 'none';
+  dialog.showModal();
+}
+
+function generatePassword() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let pwd = '';
+  const array = new Uint8Array(12);
+  crypto.getRandomValues(array);
+  for (let i = 0; i < 12; i++) {
+    pwd += chars[array[i] % chars.length];
+  }
+  document.getElementById('reset-password-input').value = pwd;
+  document.getElementById('generated-hint').style.display = 'inline';
+}
+</script>
 {% endblock %}
