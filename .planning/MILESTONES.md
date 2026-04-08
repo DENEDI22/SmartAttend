@@ -1,5 +1,19 @@
 # Milestones
 
+## v1.2 QOL Improvements (Shipped: 2026-04-08)
+
+**Phases completed:** 5 phases, 8 plans
+
+**Key accomplishments:**
+
+- Removed lux-sensor dead code, tuned token rotation to 90s, extended student sessions to 30 days
+- Self-service password change for all roles with reusable form partial; admin password reset with dialog UI and crypto password generator
+- SystemSetting key-value model with global/per-entry late threshold; three-state attendance (Anwesend/Verspätet/Abwesend) with color-coded display
+- Student attendance dashboard with 5 stat cards and month-grouped lesson history
+- CSV bulk import for users and schedules with template download, validation preview, overlap detection, and atomic confirm
+
+---
+
 ## v1.1 Physical Devices (Shipped: 2026-04-07)
 
 **Phases completed:** 2 phases, 3 plans, 5 tasks

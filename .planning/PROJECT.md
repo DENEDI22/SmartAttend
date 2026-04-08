@@ -10,13 +10,14 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ## Current State
 
-**v1.2 QOL Improvements complete.** All 14 phases shipped across 3 milestones.
+**v1.2 QOL Improvements shipped.** All 14 phases complete across 3 milestones.
 
 - Tech stack: FastAPI + Jinja2 + SQLAlchemy + SQLite + Mosquitto + paho-mqtt + APScheduler
 - Docker Compose stack with 3 containers (server, mqtt, ngrok)
-- ESP32 firmware at `ESP32THINGS/SmartAttend/SmartAttend.ino` (269 lines)
-- 14 phases shipped across 2 milestones + v1.2 QOL
-- Timeline: 2026-03-27 → present
+- ESP32 firmware at `ESP32THINGS/SmartAttend/SmartAttend.ino`
+- ~3,400 LOC (Python + HTML + JS + CSS)
+- 3 milestones shipped: v1.0 MVP, v1.1 Physical Devices, v1.2 QOL Improvements
+- Timeline: 2026-03-27 → 2026-04-08
 
 ## Requirements
 
@@ -35,29 +36,15 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 - ✓ ESP32 firmware aligned to server MQTT contract (register, heartbeat, token subscribe) — v1.1
 - ✓ ESP32 online-indicator LED on GPIO 13 — v1.1
 - ✓ Dummy clients removed from Compose (one kept commented out for dev) — v1.1
+- ✓ Dead code cleanup (lux sensor), token rotation 90s, student sessions 30 days — v1.2
+- ✓ Self-service password change for all roles, admin password reset — v1.2
+- ✓ Three-state attendance (Anwesend/Verspätet/Abwesend) with configurable late threshold — v1.2
+- ✓ Student attendance dashboard with summary stats and lesson history — v1.2
+- ✓ CSV bulk import for users and schedule entries with validation preview — v1.2
 
 ### Active
 
-- ✓ Student dashboard with attendance summary and detailed lesson list — v1.2 Phase 13
-- ✓ Password change (self-service for all users + admin reset) — v1.2 Phase 11
-- ✓ "Verspätet" late threshold — global default with per-schedule-entry override — v1.2 Phase 12
-- ✓ Lux reading feature removed — v1.2 Phase 10
-- ✓ Check-in token rotation extended to 90s — v1.2 Phase 10
-- ✓ Student JWT session extended to 30 days — v1.2 Phase 10
-- ✓ CSV import for Users and Schedule entries (template + upload + validation preview) — v1.2 Phase 14
-
-## Current Milestone: v1.2 QOL Improvements
-
-**Goal:** Quality-of-life improvements to attendance tracking — student visibility, late tracking, auth polish, and bulk data import.
-
-**Target features:**
-- Student dashboard with attendance summary stats and detailed lesson list (including late status)
-- Password change (self-service for all users + admin reset)
-- "Verspätet" late threshold — global default with per-schedule-entry override; shown on teacher and student dashboards
-- Remove lux reading feature (MQTT handler, dummy client code)
-- Extend check-in token validity from 60s to 90s
-- Remove JWT 1h expiry for students — stay logged in until explicit logout
-- CSV import for Users and Schedule entries with template download, upload, validation preview, and error highlighting
+(None — all requirements shipped. Define next milestone with `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -118,4 +105,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-08 after Phase 13 Student Dashboard complete*
+*Last updated: 2026-04-08 after v1.2 milestone*
