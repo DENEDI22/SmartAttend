@@ -56,7 +56,7 @@
           <td>{{ "Aktiv" if u.is_active else "Inaktiv" }}</td>
           <td>
             {% if u.is_active and u.id != user.id %}
-            <div style="display: flex; gap: 4px; align-items: center;">
+            <div class="flex-actions" style="display: flex; gap: 4px; align-items: center;">
               <button type="button" class="outline"
                       style="margin: 0; padding: 4px 12px;"
                       onclick="openResetDialog({{ u.id }}, '{{ u.first_name }} {{ u.last_name }}')">
@@ -129,7 +129,7 @@
 <article>
   <h2>Neuer Benutzer</h2>
   <form method="post" action="/admin/users/create">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
       <label>
         Vorname
         <input type="text" name="first_name" required>
@@ -147,7 +147,7 @@
       Passwort
       <input type="password" name="password" required minlength="8">
     </label>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
       <label>
         Rolle
         <select name="role" required>
@@ -167,6 +167,23 @@
       </label>
     </div>
     <button type="submit">Benutzer erstellen</button>
+  </form>
+</article>
+
+<hr>
+<article>
+  <hgroup>
+    <h2>CSV-Import: Benutzer</h2>
+    <p>Mehrere Benutzer gleichzeitig importieren</p>
+  </hgroup>
+  <div style="margin-bottom: 16px;">
+    <a href="/admin/users/csv-template" role="button" class="outline">Vorlage herunterladen</a>
+  </div>
+  <form method="post" action="/admin/users/csv-upload" enctype="multipart/form-data">
+    <label>CSV-Datei auswaehlen
+      <input type="file" name="file" accept=".csv">
+    </label>
+    <button type="submit">Hochladen und pruefen</button>
   </form>
 </article>
 

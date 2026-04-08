@@ -1,8 +1,12 @@
 """Admin interface router: device management, user management, schedule CRUD."""
+import csv
+import io
+import json
+import re
 from datetime import time as dt_time
 
-from fastapi import APIRouter, Depends, Form, Query, Request
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Depends, Form, Query, Request, UploadFile, File
+from fastapi.responses import RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -282,6 +286,208 @@ async def users_update(
             u.role = form[role_key]
     db.commit()
     return RedirectResponse(url="/admin/users?msg=Erfolgreich+aktualisiert.", status_code=303)
+
+
+# ── User CSV Import (CSV-01, CSV-02, CSV-03) ────────────────────────
+
+
+USER_CSV_HEADERS = ["email", "first_name", "last_name", "role", "class_name", "password"]
+
+
+def validate_user_row(row: dict, db: Session) -> list[str]:
+    """Validate a single CSV row for user import. Returns list of error strings."""
+    errors = []
+    # 1. Required fields
+    for field in ("email", "first_name", "last_name", "role", "password"):
+        if not row.get(field, "").strip():
+            errors.append(f'Pflichtfeld "{field}" fehlt')
+    # 2. Email format
+    email = row.get("email", "").strip()
+    if email and ("@" not in email or "." not in email):
+        errors.append("Ungueltige E-Mail-Adresse")
+    # 3. Role validation
+    role = row.get("role", "").strip()
+    if role and role not in ("admin", "teacher", "student"):
+        errors.append("Ungueltige Rolle. Erlaubt: admin, teacher, student")
+    # 4. Password length
+    password = row.get("password", "").strip()
+    if password and len(password) < 6:
+        errors.append("Passwort zu kurz (mindestens 6 Zeichen)")
+    # 5. Existing user info note (not an error)
+    if email and not errors:
+        existing = db.query(User).filter(User.email == email).first()
+        if existing:
+            errors.append("Existierender Benutzer wird aktualisiert")
+    return errors
+
+
+@router.get("/users/csv-template")
+async def users_csv_template(user: User = Depends(require_role("admin"))):
+    """Download CSV template for user import (D-01, D-02, D-04, D-14)."""
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=",")
+    writer.writerow(USER_CSV_HEADERS)
+    writer.writerow(["max.mustermann@schule.de", "Max", "Mustermann", "student", "10A", "passwort123"])
+    content = output.getvalue()
+    return Response(
+        content=content,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": 'attachment; filename="benutzer_vorlage.csv"'},
+    )
+
+
+@router.post("/users/csv-upload")
+async def users_csv_upload(
+    request: Request,
+    file: UploadFile = File(...),
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Upload and validate a user CSV file (D-05, D-06, D-09, D-12, D-13)."""
+    raw = await file.read()
+
+    # Size check
+    if len(raw) > 1_048_576:
+        return RedirectResponse(
+            url="/admin/users?error=Datei+zu+gross.+Maximale+Groesse:+1+MB.",
+            status_code=303,
+        )
+
+    # Decode with fallback
+    try:
+        text = raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        try:
+            text = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            text = raw.decode("latin-1")
+
+    reader = csv.DictReader(io.StringIO(text))
+
+    # Validate headers
+    if reader.fieldnames is None or not all(h in reader.fieldnames for h in USER_CSV_HEADERS):
+        missing = [h for h in USER_CSV_HEADERS if reader.fieldnames is None or h not in reader.fieldnames]
+        return RedirectResponse(
+            url=f"/admin/users?error=Fehlende+Spalten:+{',+'.join(missing)}",
+            status_code=303,
+        )
+
+    rows = []
+    for i, raw_row in enumerate(reader, start=2):
+        # Skip blank rows
+        if all(not (v or "").strip() for v in raw_row.values()):
+            continue
+        row_errors = validate_user_row(raw_row, db)
+        is_update = any("aktualisiert" in e for e in row_errors)
+        # Separate real errors from info notes
+        real_errors = [e for e in row_errors if "aktualisiert" not in e]
+        rows.append({
+            "email": (raw_row.get("email") or "").strip(),
+            "first_name": (raw_row.get("first_name") or "").strip(),
+            "last_name": (raw_row.get("last_name") or "").strip(),
+            "role": (raw_row.get("role") or "").strip(),
+            "class_name": (raw_row.get("class_name") or "").strip(),
+            "password": (raw_row.get("password") or "").strip(),
+            "row_num": i,
+            "errors": row_errors,
+            "is_update": is_update,
+        })
+
+    if not rows:
+        return RedirectResponse(
+            url="/admin/users?error=Keine+Datenzeilen+gefunden.+Die+CSV-Datei+enthaelt+nur+die+Kopfzeile.",
+            status_code=303,
+        )
+
+    has_errors = any(
+        any("aktualisiert" not in e for e in r["errors"])
+        for r in rows
+    )
+    error_count = sum(
+        1 for r in rows
+        if any("aktualisiert" not in e for e in r["errors"])
+    )
+
+    # Build rows_json without errors (re-validate on confirm)
+    rows_json = json.dumps([
+        {k: v for k, v in r.items() if k not in ("errors", "is_update", "row_num")}
+        for r in rows
+    ])
+
+    return templates.TemplateResponse(
+        request=request,
+        name="admin_users_csv_preview.html",
+        context={
+            "user": user,
+            "rows": rows,
+            "has_errors": has_errors,
+            "rows_json": rows_json,
+            "error_count": error_count,
+            "total_count": len(rows),
+            "active_page": "users",
+        },
+    )
+
+
+@router.post("/users/csv-confirm")
+async def users_csv_confirm(
+    rows_json: str = Form(...),
+    user: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    """Confirm and commit validated CSV rows with upsert (D-06, D-10)."""
+    try:
+        rows = json.loads(rows_json)
+    except json.JSONDecodeError:
+        return RedirectResponse(url="/admin/users?error=Ungueltige+Daten.", status_code=303)
+
+    # Re-validate
+    for row in rows:
+        errors = validate_user_row(row, db)
+        real_errors = [e for e in errors if "aktualisiert" not in e]
+        if real_errors:
+            return RedirectResponse(url="/admin/users?error=Validierungsfehler.", status_code=303)
+
+    count = 0
+    for row in rows:
+        email = row["email"].strip()
+        first_name = row["first_name"].strip()
+        last_name = row["last_name"].strip()
+        role = row["role"].strip()
+        class_name = row.get("class_name", "").strip() or None
+        password = row["password"].strip()
+
+        existing = db.query(User).filter(User.email == email).first()
+        if existing:
+            existing.first_name = first_name
+            existing.last_name = last_name
+            existing.role = role
+            existing.class_name = class_name
+            existing.password_hash = get_password_hash(password)
+        else:
+            # Auto-create SchoolClass if needed
+            if class_name:
+                existing_class = db.query(SchoolClass).filter(SchoolClass.name == class_name).first()
+                if not existing_class:
+                    db.add(SchoolClass(name=class_name))
+                    db.flush()
+            new_user = User(
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                role=role,
+                class_name=class_name,
+                password_hash=get_password_hash(password),
+                is_active=True,
+            )
+            db.add(new_user)
+        count += 1
+
+    db.commit()
+    return RedirectResponse(
+        url=f"/admin/users?msg={count}+Benutzer+erfolgreich+importiert.",
+        status_code=303,
+    )
 
 
 # ── Schedule CRUD (ADMIN-07 through ADMIN-10) ──────────────────────

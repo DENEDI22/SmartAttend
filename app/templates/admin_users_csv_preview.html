@@ -1,0 +1,45 @@
+{% extends "admin_base.html" %}
+{% block title %}CSV-Import Vorschau — SmartAttend{% endblock %}
+{% block admin_content %}
+<hgroup>
+  <h2>Vorschau: {{ rows|length }} Zeilen</h2>
+  {% if has_errors %}
+  <p style="color: var(--pico-del-color);">{{ error_count }} von {{ total_count }} Zeilen enthalten Fehler. Bitte korrigieren und erneut hochladen.</p>
+  {% else %}
+  <p>Alle {{ rows|length }} Zeilen sind gueltig. Import bestaetigen?</p>
+  {% endif %}
+</hgroup>
+<figure>
+  <table>
+    <thead>
+      <tr><th>#</th><th>E-Mail</th><th>Vorname</th><th>Nachname</th><th>Rolle</th><th>Klasse</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr {% if row.errors and row.errors | select("ne", "Existierender Benutzer wird aktualisiert") | list %}style="background: color-mix(in srgb, var(--pico-del-color) 15%, transparent);"{% endif %}>
+        <td>{{ row.row_num }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.first_name }}</td>
+        <td>{{ row.last_name }}</td>
+        <td>{{ row.role }}</td>
+        <td>{{ row.class_name }}</td>
+        <td>{% if row.errors %}<span style="color: var(--pico-del-color);">{{ row.errors | join('; ') }}</span>{% else %}<span style="color: var(--pico-ins-color);">OK</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+{% if not has_errors %}
+<form method="post" action="/admin/users/csv-confirm">
+  <input type="hidden" name="rows_json" value="{{ rows_json|e }}">
+  <div role="group">
+    <a href="/admin/users" role="button" class="outline">Zurueck</a>
+    <button type="submit">Import bestaetigen</button>
+  </div>
+</form>
+{% else %}
+<div role="group">
+  <a href="/admin/users" role="button" class="outline">Zurueck</a>
+</div>
+{% endif %}
+{% endblock %}
