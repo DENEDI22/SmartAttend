@@ -1,6 +1,6 @@
 """Dummy MQTT client simulating an ESP32 device for SmartAttend.
 
-Publishes registration on connect, heartbeat every 30s, lux every 60s.
+Publishes registration on connect, heartbeat every 30s.
 Subscribes to token URL topic and logs received URLs.
 Configured entirely via environment variables.
 """
@@ -19,7 +19,6 @@ DEVICE_ID = os.environ.get("DEVICE_ID", "unknown")
 ROOM = os.environ.get("ROOM", "unknown")
 MQTT_BROKER = os.environ.get("MQTT_BROKER", "localhost")
 MQTT_PORT = int(os.environ.get("MQTT_PORT", "1883"))
-LUX_VALUE = float(os.environ.get("LUX_VALUE", "400"))
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -69,21 +68,12 @@ def heartbeat_loop(client):
         stop_event.wait(30)
 
 
-def lux_loop(client):
-    """DUMMY-03: Publish lux reading every 60 seconds."""
-    while not stop_event.is_set():
-        if client.is_connected():
-            client.publish(f"sensors/{DEVICE_ID}/lux", str(LUX_VALUE), qos=0)
-            logger.debug("Lux reading sent: %s", LUX_VALUE)
-        stop_event.wait(60)
-
-
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
 def main():
     """Start the dummy MQTT client."""
-    logger.info("Starting dummy client: device=%s room=%s lux=%s", DEVICE_ID, ROOM, LUX_VALUE)
+    logger.info("Starting dummy client: device=%s room=%s", DEVICE_ID, ROOM)
 
     client = mqtt.Client(
         callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
@@ -103,7 +93,6 @@ def main():
 
     # Start periodic loops as daemon threads
     threading.Thread(target=heartbeat_loop, args=(client,), daemon=True).start()
-    threading.Thread(target=lux_loop, args=(client,), daemon=True).start()
 
     # Connect to MQTT broker
     try:

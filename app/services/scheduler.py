@@ -111,7 +111,7 @@ def start_scheduler():
     _scheduler = BackgroundScheduler()
     _scheduler.add_job(
         _issue_tokens,
-        trigger=IntervalTrigger(minutes=1),
+        trigger=IntervalTrigger(seconds=90),
         id="issue_tokens",
         max_instances=1,
     )
@@ -122,7 +122,7 @@ def start_scheduler():
         max_instances=1,
     )
     _scheduler.start()
-    logger.info("Scheduler started with token issuance (1min) and heartbeat check (30s)")
+    logger.info("Scheduler started with token issuance (90s) and heartbeat check (30s)")
 
 
 def stop_scheduler():

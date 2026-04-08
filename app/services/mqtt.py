@@ -1,4 +1,4 @@
-"""MQTT service module: subscribes to device topics, handles registration/heartbeat/lux, publishes tokens."""
+"""MQTT service module: subscribes to device topics, handles registration/heartbeat, publishes tokens."""
 import json
 import logging
 from datetime import datetime
@@ -20,7 +20,6 @@ def _on_connect(client, userdata, connect_flags, reason_code, properties):
         client.subscribe([
             ("devices/register", 0),
             ("devices/+/status", 0),
-            ("sensors/+/lux", 0),
         ])
         logger.info("MQTT connected and subscribed to device topics")
     else:
@@ -40,11 +39,6 @@ def _on_message(client, userdata, message):
             parts = topic.split("/")
             device_id = parts[1]
             _handle_heartbeat(device_id, payload)
-        elif topic.startswith("sensors/") and topic.endswith("/lux"):
-            # sensors/{device_id}/lux
-            parts = topic.split("/")
-            device_id = parts[1]
-            _handle_lux(device_id, payload)
     except Exception:
         logger.exception("Error processing MQTT message on topic %s", message.topic)
 
@@ -87,19 +81,6 @@ def _handle_heartbeat(device_id: str, payload: str):
             return
         device.is_online = True
         device.last_seen = datetime.now()
-        db.commit()
-    finally:
-        db.close()
-
-
-def _handle_lux(device_id: str, payload: str):
-    """Update device lux reading."""
-    db = SessionLocal()
-    try:
-        device = db.query(Device).filter_by(device_id=device_id).first()
-        if not device:
-            return
-        device.last_lux = float(payload)
         db.commit()
     finally:
         db.close()
