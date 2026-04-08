@@ -135,4 +135,4 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 11. Password Management | v1.2 | 2/2 | Complete    | 2026-04-08 |
 | 12. Late Threshold | v1.2 | 1/2 | Complete    | 2026-04-08 |
 | 13. Student Dashboard | v1.2 | 1/1 | Complete    | 2026-04-08 |
-| 14. CSV Import | v1.2 | 2/2 | Complete   | 2026-04-08 |
+| 14. CSV Import | v1.2 | 2/2 | Complete    | 2026-04-08 |
