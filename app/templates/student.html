@@ -1,12 +1,71 @@
 {% extends "student_base.html" %}
-{% block title %}SmartAttend{% endblock %}
+{% block title %}Meine Anwesenheit -- SmartAttend{% endblock %}
 {% block student_content %}
-<article style="max-width: 480px; margin: 2rem auto;">
-  <hgroup>
-    <h1>SmartAttend</h1>
-    <p>Anwesenheitserfassung</p>
-  </hgroup>
-  <p>Bitte Gerät antippen, um Anwesenheit zu erfassen.</p>
+<h1>Meine Anwesenheit</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+  <article style="text-align: center; margin: 0;">
+    <h2 style="margin-bottom: 0;">{{ stats.total }}</h2>
+    <small>Stunden gesamt</small>
+  </article>
+  <article style="text-align: center; margin: 0;">
+    <h2 style="margin-bottom: 0; color: #2e7d32;">{{ stats.attended }}</h2>
+    <small>Anwesend</small>
+  </article>
+  <article style="text-align: center; margin: 0;">
+    <h2 style="margin-bottom: 0; color: #e65100;">{{ stats.late }}</h2>
+    <small>Verspaetet</small>
+  </article>
+  <article style="text-align: center; margin: 0;">
+    <h2 style="margin-bottom: 0; color: var(--pico-del-color);">{{ stats.missed }}</h2>
+    <small>Abwesend</small>
+  </article>
+  <article style="text-align: center; margin: 0;">
+    <h2 style="margin-bottom: 0;">{{ stats.percentage }}%</h2>
+    <small>Anwesenheitsquote</small>
+  </article>
+</div>
+
+{% if stats.total == 0 %}
+<article>
+  <h2>Keine Stunden gefunden</h2>
+  <p>Es sind noch keine Unterrichtsstunden fuer Sie erfasst.</p>
 </article>
+{% else %}
+{% for group in groups %}
+<h3>{{ group.month }}</h3>
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Klasse</th>
+        <th>Zeit</th>
+        <th>Raum</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lesson in group.lessons %}
+      <tr>
+        <td>{{ lesson.date }}</td>
+        <td>{{ lesson.class_name }}</td>
+        <td>{{ lesson.start_time }} -- {{ lesson.end_time }}</td>
+        <td>{{ lesson.room }}</td>
+        {% if lesson.status == "Anwesend" %}
+        <td style="color: #2e7d32">{{ lesson.status }}</td>
+        {% elif lesson.status == "Verspaetet" %}
+        <td style="color: #e65100">{{ lesson.status }}</td>
+        {% else %}
+        <td style="color: var(--pico-del-color)">{{ lesson.status }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+{% endfor %}
+{% endif %}
+
 {% include "_password_change.html" %}
 {% endblock %}
