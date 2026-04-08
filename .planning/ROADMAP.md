@@ -65,9 +65,10 @@ Plans:
   1. User can change their password by entering current password, new password, and confirmation
   2. User sees an error if current password is wrong or new passwords do not match
   3. Admin can reset any user's password from the user management page without knowing the old password
-**Plans**: 1 plan
+**Plans**: 2 plans
 Plans:
-- [ ] 10-01-PLAN.md — Remove lux dead code and tune token/session lifetimes
+- [ ] 11-01-PLAN.md — Self-service password change (all roles)
+- [ ] 11-02-PLAN.md — Admin password reset with dialog UI
 **UI hint**: yes
 
 ### Phase 12: Late Threshold
@@ -129,7 +130,7 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 8. Network & Public Access | v1.1 | 2/2 | Complete | 2026-04-02 |
 | 9. ESP32 Firmware | v1.1 | 1/1 | Complete | 2026-04-02 |
 | 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
-| 11. Password Management | v1.2 | 0/? | Not started | - |
+| 11. Password Management | v1.2 | 0/2 | Not started | - |
 | 12. Late Threshold | v1.2 | 0/? | Not started | - |
 | 13. Student Dashboard | v1.2 | 0/? | Not started | - |
 | 14. CSV Import | v1.2 | 0/? | Not started | - |
