@@ -111,7 +111,7 @@ Plans:
   5. Admin can confirm schedule import and only valid rows are committed to the database
 **Plans**: 2 plans
 Plans:
-- [ ] 14-01-PLAN.md — User CSV import (template, upload/preview, confirm with upsert)
+- [x] 14-01-PLAN.md — User CSV import (template, upload/preview, confirm with upsert)
 - [ ] 14-02-PLAN.md — Schedule CSV import (template, upload/preview with overlap detection, confirm)
 **UI hint**: yes
 
@@ -135,4 +135,4 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 11. Password Management | v1.2 | 2/2 | Complete    | 2026-04-08 |
 | 12. Late Threshold | v1.2 | 1/2 | Complete    | 2026-04-08 |
 | 13. Student Dashboard | v1.2 | 1/1 | Complete    | 2026-04-08 |
-| 14. CSV Import | v1.2 | 0/2 | Not started | - |
+| 14. CSV Import | v1.2 | 1/2 | In Progress|  |
