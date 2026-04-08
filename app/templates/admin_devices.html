@@ -177,4 +177,21 @@
   {% endfor %}
 </datalist>
 {% endif %}
+
+<hr>
+<article>
+  <hgroup>
+    <h2>CSV-Import: Stundenplan</h2>
+    <p>Mehrere Stundenplaneintraege gleichzeitig importieren</p>
+  </hgroup>
+  <div style="margin-bottom: 16px;">
+    <a href="/admin/schedule/csv-template" role="button" class="outline">Vorlage herunterladen</a>
+  </div>
+  <form method="post" action="/admin/schedule/csv-upload" enctype="multipart/form-data">
+    <label>CSV-Datei auswaehlen
+      <input type="file" name="file" accept=".csv">
+    </label>
+    <button type="submit">Hochladen und pruefen</button>
+  </form>
+</article>
 {% endblock %}

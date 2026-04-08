@@ -1,9 +1,8 @@
-"""Admin interface router: device management, user management, schedule CRUD."""
+"""Admin interface router: device management, user management, schedule CRUD, CSV import."""
 import csv
 import io
 import json
-import re
-from datetime import time as dt_time
+from datetime import datetime, time as dt_time
 
 from fastapi import APIRouter, Depends, Form, Query, Request, UploadFile, File
 from fastapi.responses import RedirectResponse, Response
@@ -597,41 +596,252 @@ async def api_check_conflict(
     return {"conflict": False}
 
 
-# ── Settings (LATE-01, LATE-02) ──────────────────────────────────────
+# ── Schedule CSV Import ───────────────────────────────────────────────
 
 
-@router.get("/settings")
-async def settings_page(
+SCHEDULE_CSV_HEADERS = ["device_id", "teacher_email", "class_name", "weekday", "start_time", "end_time", "late_threshold_minutes"]
+
+
+def validate_schedule_row(row: dict, row_num: int, db: Session, previous_rows: list[dict]) -> tuple[list[str], int | None, int | None]:
+    """Validate a schedule CSV row. Returns (errors, resolved_device_pk, resolved_teacher_pk)."""
+    errors: list[str] = []
+    device_pk = None
+    teacher_pk = None
+
+    # 1. Required fields
+    for field in ["device_id", "teacher_email", "class_name", "weekday", "start_time", "end_time"]:
+        if not row.get(field, "").strip():
+            errors.append(f'Pflichtfeld "{field}" fehlt')
+
+    if errors:
+        return errors, None, None
+
+    # 2. Device lookup
+    device = db.query(Device).filter(Device.device_id == row["device_id"].strip()).first()
+    if not device:
+        errors.append(f'Geraet "{row["device_id"].strip()}" nicht gefunden')
+    else:
+        device_pk = device.id
+
+    # 3. Teacher lookup
+    teacher_email = row["teacher_email"].strip()
+    teacher = db.query(User).filter(User.email == teacher_email, User.role == "teacher").first()
+    if not teacher:
+        errors.append(f'Lehrer mit E-Mail "{teacher_email}" nicht gefunden')
+    else:
+        teacher_pk = teacher.id
+
+    # 4. Weekday
+    weekday = None
+    try:
+        weekday = int(row["weekday"].strip())
+        if weekday < 0 or weekday > 6:
+            errors.append("Ungueltige Wochentag-Nummer (0-6)")
+            weekday = None
+    except ValueError:
+        errors.append("Ungueltige Wochentag-Nummer (0-6)")
+
+    # 5. Time format
+    start_time = None
+    end_time = None
+    try:
+        start_time = datetime.strptime(row["start_time"].strip(), "%H:%M").time()
+    except ValueError:
+        errors.append("Ungueltiges Zeitformat (erwartet HH:MM)")
+    try:
+        end_time = datetime.strptime(row["end_time"].strip(), "%H:%M").time()
+    except ValueError:
+        errors.append("Ungueltiges Zeitformat (erwartet HH:MM)")
+
+    # 6. start < end
+    if start_time and end_time and start_time >= end_time:
+        errors.append("Startzeit muss vor Endzeit liegen")
+
+    # 7. late_threshold_minutes
+    ltm = row.get("late_threshold_minutes", "").strip()
+    if ltm:
+        try:
+            ltm_val = int(ltm)
+            if ltm_val <= 0:
+                errors.append("Ungueltige Verspaetungsminuten")
+        except ValueError:
+            errors.append("Ungueltige Verspaetungsminuten")
+
+    # 8. DB overlap
+    if device_pk and weekday is not None and start_time and end_time and not errors:
+        conflict = check_schedule_conflict(db, device_pk, weekday, start_time, end_time)
+        if conflict:
+            errors.append("Ueberschneidung mit bestehendem Eintrag")
+
+    # 9. Intra-CSV overlap
+    if device and weekday is not None and start_time and end_time and not errors:
+        for prev in previous_rows:
+            if prev["device_id"].strip() == row["device_id"].strip():
+                try:
+                    p_weekday = int(prev["weekday"].strip())
+                    p_start = datetime.strptime(prev["start_time"].strip(), "%H:%M").time()
+                    p_end = datetime.strptime(prev["end_time"].strip(), "%H:%M").time()
+                except (ValueError, KeyError):
+                    continue
+                if p_weekday == weekday and start_time < p_end and p_start < end_time:
+                    errors.append(f"Ueberschneidung mit Zeile {prev['_row_num']} in dieser Datei")
+
+    return errors, device_pk, teacher_pk
+
+
+@router.get("/schedule/csv-template")
+async def schedule_csv_template(user: User = Depends(require_role("admin"))):
+    """Download schedule CSV template (D-01, D-03, D-04)."""
+    content = "device_id,teacher_email,class_name,weekday,start_time,end_time,late_threshold_minutes\n"
+    content += "e101,lehrer@schule.de,10A,0,08:00,09:30,\n"
+    return Response(
+        content=content,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": 'attachment; filename="stundenplan_vorlage.csv"'},
+    )
+
+
+@router.post("/schedule/csv-upload")
+async def schedule_csv_upload(
     request: Request,
+    file: UploadFile = File(...),
     user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
-    """Admin settings page with global late threshold."""
-    late_threshold_minutes = SystemSetting.get_value(db, "late_threshold_minutes", "10")
+    """Upload and validate schedule CSV (D-05, D-07, D-09, D-11, D-12, D-13)."""
+    # Read file with size limit
+    raw = await file.read()
+    if len(raw) > 1_000_000:
+        return RedirectResponse(url="/admin/devices?error=Datei+zu+gross+(max+1MB).", status_code=303)
+
+    # Decode: try UTF-8 (with BOM), fall back to latin-1
+    if raw[:3] == b"\xef\xbb\xbf":
+        raw = raw[3:]
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        text = raw.decode("latin-1")
+
+    reader = csv.DictReader(io.StringIO(text), delimiter=",")
+    if not reader.fieldnames:
+        return RedirectResponse(url="/admin/devices?error=Leere+CSV-Datei.", status_code=303)
+
+    # Validate headers
+    required_headers = {"device_id", "teacher_email", "class_name", "weekday", "start_time", "end_time"}
+    actual_headers = {h.strip() for h in reader.fieldnames}
+    missing = required_headers - actual_headers
+    if missing:
+        return RedirectResponse(
+            url=f"/admin/devices?error=Fehlende+Spalten:+{',+'.join(sorted(missing))}.",
+            status_code=303,
+        )
+
+    rows = []
+    previous_rows: list[dict] = []
+    for i, raw_row in enumerate(reader, start=2):
+        row = {k.strip(): (v.strip() if v else "") for k, v in raw_row.items()}
+        row["_row_num"] = i
+        errors, device_pk, teacher_pk = validate_schedule_row(row, i, db, previous_rows)
+        rows.append({
+            "row_num": i,
+            "device_id": row.get("device_id", ""),
+            "teacher_email": row.get("teacher_email", ""),
+            "class_name": row.get("class_name", ""),
+            "weekday": row.get("weekday", ""),
+            "start_time": row.get("start_time", ""),
+            "end_time": row.get("end_time", ""),
+            "late_threshold_minutes": row.get("late_threshold_minutes", ""),
+            "errors": errors,
+        })
+        previous_rows.append(row)
+
+    error_count = sum(1 for r in rows if r["errors"])
+    rows_json = json.dumps([{
+        "device_id": r["device_id"],
+        "teacher_email": r["teacher_email"],
+        "class_name": r["class_name"],
+        "weekday": r["weekday"],
+        "start_time": r["start_time"],
+        "end_time": r["end_time"],
+        "late_threshold_minutes": r["late_threshold_minutes"],
+    } for r in rows if not r["errors"]])
+
     return templates.TemplateResponse(
         request=request,
-        name="admin_settings.html",
+        name="admin_schedule_csv_preview.html",
         context={
             "user": user,
-            "late_threshold_minutes": late_threshold_minutes,
-            "active_page": "settings",
+            "rows": rows,
+            "has_errors": error_count > 0,
+            "error_count": error_count,
+            "total_count": len(rows),
+            "rows_json": rows_json,
+            "active_page": "devices",
         },
     )
 
 
-@router.post("/settings")
-async def settings_save(
-    request: Request,
-    late_threshold_minutes: int = Form(...),
+@router.post("/schedule/csv-confirm")
+async def schedule_csv_confirm(
+    rows_json: str = Form(...),
     user: User = Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
-    """Save global settings."""
-    if late_threshold_minutes < 1 or late_threshold_minutes > 120:
-        return RedirectResponse(
-            url="/admin/settings?error=Wert+muss+zwischen+1+und+120+liegen.",
-            status_code=303,
-        )
-    SystemSetting.set_value(db, "late_threshold_minutes", str(late_threshold_minutes))
+    """Confirm and commit schedule CSV import."""
+    try:
+        rows = json.loads(rows_json)
+    except json.JSONDecodeError:
+        return RedirectResponse(url="/admin/devices?error=Validierungsfehler.", status_code=303)
+
+    if not rows:
+        return RedirectResponse(url="/admin/devices?error=Keine+Zeilen+zum+Importieren.", status_code=303)
+
+    # Re-validate each row
+    previous_rows: list[dict] = []
+    for i, row in enumerate(rows, start=1):
+        row["_row_num"] = i
+        errors, _, _ = validate_schedule_row(row, i, db, previous_rows)
+        if errors:
+            return RedirectResponse(url="/admin/devices?error=Validierungsfehler.", status_code=303)
+        previous_rows.append(row)
+
+    # Commit all rows
+    count = 0
+    for row in rows:
+        device = db.query(Device).filter(Device.device_id == row["device_id"].strip()).first()
+        teacher = db.query(User).filter(User.email == row["teacher_email"].strip(), User.role == "teacher").first()
+        if not device or not teacher:
+            return RedirectResponse(url="/admin/devices?error=Validierungsfehler.", status_code=303)
+
+        # Auto-create SchoolClass
+        class_name = row["class_name"].strip()
+        existing_class = db.query(SchoolClass).filter(SchoolClass.name == class_name).first()
+        if not existing_class:
+            db.add(SchoolClass(name=class_name))
+            db.flush()
+
+        start_time = datetime.strptime(row["start_time"].strip(), "%H:%M").time()
+        end_time = datetime.strptime(row["end_time"].strip(), "%H:%M").time()
+        ltm = row.get("late_threshold_minutes", "").strip()
+
+        entry_kwargs = {
+            "device_id": device.id,
+            "teacher_id": teacher.id,
+            "class_name": class_name,
+            "weekday": int(row["weekday"].strip()),
+            "start_time": start_time,
+            "end_time": end_time,
+        }
+        # Only set late_threshold_minutes if the model supports it
+        if ltm and hasattr(ScheduleEntry, "late_threshold_minutes"):
+            entry_kwargs["late_threshold_minutes"] = int(ltm)
+
+        entry = ScheduleEntry(**entry_kwargs)
+        db.add(entry)
+        count += 1
+
     db.commit()
-    return RedirectResponse(url="/admin/settings?msg=Einstellungen+gespeichert.", status_code=303)
+    return RedirectResponse(
+        url=f"/admin/devices?msg={count}+Stundenplaneintraege+erfolgreich+importiert.",
+        status_code=303,
+    )
