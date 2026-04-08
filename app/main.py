@@ -40,6 +40,13 @@ async def _seed_admin(db: Session) -> None:
 async def lifespan(app: FastAPI):
     """Create database tables, seed admin, start MQTT and scheduler on startup."""
     Base.metadata.create_all(bind=engine)
+    # Migrate: add late_threshold_minutes if missing (added in phase-12)
+    from sqlalchemy import inspect, text
+    insp = inspect(engine)
+    cols = [c["name"] for c in insp.get_columns("schedule_entries")]
+    if "late_threshold_minutes" not in cols:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE schedule_entries ADD COLUMN late_threshold_minutes INTEGER"))
     db = SessionLocal()
     try:
         await _seed_admin(db)
@@ -64,8 +71,10 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 from app.routers.auth import router as auth_router  # noqa: E402
 from app.routers.teacher import router as teacher_router  # noqa: E402
+from app.routers.student import router as student_router  # noqa: E402
 app.include_router(auth_router)
 app.include_router(teacher_router)
+app.include_router(student_router)
 
 from app.routers.admin import router as admin_router  # noqa: E402
 app.include_router(admin_router)
