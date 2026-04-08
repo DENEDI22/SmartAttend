@@ -25,7 +25,7 @@
         <td>{{ lesson.room }}</td>
         <td>{{ lesson.start_time }} -- {{ lesson.end_time }}</td>
         {% if lesson.token_id is not none %}
-        <td>{{ lesson.checked_in }}/{{ lesson.expected }}</td>
+        <td>{{ lesson.checked_in }}/{{ lesson.expected }}{% if lesson.late_count %} <small style="color: #e65100">({{ lesson.late_count }} versp.)</small>{% endif %}</td>
         <td><a href="/teacher/lesson/{{ lesson.token_id }}">Details</a></td>
         {% else %}
         <td>--</td>
