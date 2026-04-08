@@ -10,12 +10,12 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ## Current State
 
-**v1.2 QOL Improvements in progress.** Phase 13 (Student Dashboard) complete — attendance summary stats and month-grouped lesson history for students.
+**v1.2 QOL Improvements complete.** All 14 phases shipped across 3 milestones.
 
 - Tech stack: FastAPI + Jinja2 + SQLAlchemy + SQLite + Mosquitto + paho-mqtt + APScheduler
 - Docker Compose stack with 3 containers (server, mqtt, ngrok)
 - ESP32 firmware at `ESP32THINGS/SmartAttend/SmartAttend.ino` (269 lines)
-- 13 phases shipped across 2 milestones + v1.2 QOL
+- 14 phases shipped across 2 milestones + v1.2 QOL
 - Timeline: 2026-03-27 → present
 
 ## Requirements
@@ -44,7 +44,7 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 - ✓ Lux reading feature removed — v1.2 Phase 10
 - ✓ Check-in token rotation extended to 90s — v1.2 Phase 10
 - ✓ Student JWT session extended to 30 days — v1.2 Phase 10
-- [ ] CSV import for Users and Schedule entries (template + upload + validation preview)
+- ✓ CSV import for Users and Schedule entries (template + upload + validation preview) — v1.2 Phase 14
 
 ## Current Milestone: v1.2 QOL Improvements
 
