@@ -1,7 +1,7 @@
 """Teacher router: dashboard, lesson detail, CSV export."""
 import csv
 import io
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse, Response
@@ -14,6 +14,7 @@ from app.models.attendance_record import AttendanceRecord
 from app.models.attendance_token import AttendanceToken
 from app.models.device import Device
 from app.models.schedule_entry import ScheduleEntry
+from app.models.system_setting import SystemSetting
 from app.models.user import User
 
 templates = Jinja2Templates(directory="app/templates")
@@ -47,11 +48,13 @@ async def dashboard(
         .all()
     )
 
+    global_threshold = int(SystemSetting.get_value(db, "late_threshold_minutes", "10"))
+
     lessons = []
     for entry in entries:
         # Get room from Device (ScheduleEntry has no room field)
         device = db.get(Device, entry.device_id)
-        room = device.room if device else "—"
+        room = device.room if device else "\u2014"
 
         # Check for today's token
         token = (
@@ -77,6 +80,7 @@ async def dashboard(
         # Count checked-in students (across ALL tokens for this entry + date,
         # since scheduler rotates tokens every minute)
         checked_in = 0
+        late_count = 0
         token_id = None
         if token is not None:
             all_token_ids = (
@@ -101,6 +105,23 @@ async def dashboard(
                 )
             token_id = token.id
 
+            # Count late students
+            threshold_min = entry.late_threshold_minutes if entry.late_threshold_minutes is not None else global_threshold
+            lesson_start = datetime.combine(today, entry.start_time)
+            late_cutoff = lesson_start + timedelta(minutes=threshold_min)
+            if t_ids:
+                late_count = (
+                    db.query(AttendanceRecord.student_id)
+                    .join(User, AttendanceRecord.student_id == User.id)
+                    .filter(
+                        AttendanceRecord.token_id.in_(t_ids),
+                        User.class_name == entry.class_name,
+                        AttendanceRecord.checked_in_at > late_cutoff,
+                    )
+                    .distinct()
+                    .count()
+                )
+
         lessons.append({
             "class_name": entry.class_name,
             "room": room,
@@ -108,6 +129,7 @@ async def dashboard(
             "end_time": entry.end_time.strftime("%H:%M"),
             "expected": expected,
             "checked_in": checked_in,
+            "late_count": late_count,
             "token_id": token_id,
         })
 
@@ -127,13 +149,13 @@ async def dashboard(
 
 
 def _build_roster(db: Session, schedule_entry: ScheduleEntry, token: AttendanceToken | None):
-    """Build full class roster with present/absent status.
+    """Build full class roster with present/late/absent status.
 
     Queries attendance records across ALL tokens for this schedule entry + date,
     not just the current active token. This is necessary because the scheduler
     rotates tokens every minute, so students may have checked in with an earlier token.
 
-    Returns (roster_list, checked_in_count, expected_count).
+    Returns (roster_list, checked_in_count, late_count, expected_count).
     """
     # All active students in this class, sorted by last name then first name
     students = (
@@ -170,12 +192,29 @@ def _build_roster(db: Session, schedule_entry: ScheduleEntry, token: AttendanceT
                 if r.student_id not in records_by_student:
                     records_by_student[r.student_id] = r
 
+    # Determine late threshold
+    if schedule_entry.late_threshold_minutes is not None:
+        threshold_minutes = schedule_entry.late_threshold_minutes
+    else:
+        threshold_minutes = int(SystemSetting.get_value(db, "late_threshold_minutes", "10"))
+
+    # Compute late cutoff datetime
+    late_cutoff = None
+    if token is not None:
+        lesson_start = datetime.combine(token.lesson_date, schedule_entry.start_time)
+        late_cutoff = lesson_start + timedelta(minutes=threshold_minutes)
+
     roster = []
     checked_in = 0
+    late_count = 0
     for student in students:
         record = records_by_student.get(student.id)
         if record:
-            status = "Anwesend"
+            if late_cutoff is not None and record.checked_in_at > late_cutoff:
+                status = "Verspaetet"
+                late_count += 1
+            else:
+                status = "Anwesend"
             time_str = record.checked_in_at.strftime("%H:%M")
             checked_in += 1
         else:
@@ -188,7 +227,7 @@ def _build_roster(db: Session, schedule_entry: ScheduleEntry, token: AttendanceT
             "time": time_str,
         })
 
-    return roster, checked_in, len(students)
+    return roster, checked_in, late_count, len(students)
 
 
 @router.get("/lesson/{token_id}")
@@ -214,9 +253,9 @@ async def lesson_detail(
 
     # Get room from device
     device = db.get(Device, schedule_entry.device_id)
-    room = device.room if device else "—"
+    room = device.room if device else "\u2014"
 
-    roster, checked_in, expected = _build_roster(db, schedule_entry, token)
+    roster, checked_in, late_count, expected = _build_roster(db, schedule_entry, token)
 
     return templates.TemplateResponse(
         request=request,
@@ -228,6 +267,7 @@ async def lesson_detail(
             "start_time": schedule_entry.start_time.strftime("%H:%M"),
             "end_time": schedule_entry.end_time.strftime("%H:%M"),
             "checked_in": checked_in,
+            "late_count": late_count,
             "expected": expected,
             "token_id": token_id,
             "active_page": "overview",
@@ -255,7 +295,7 @@ async def lesson_csv(
             status_code=303,
         )
 
-    roster, _checked_in, _expected = _build_roster(db, schedule_entry, token)
+    roster, _checked_in, _late, _expected = _build_roster(db, schedule_entry, token)
 
     # Build CSV with UTF-8 BOM and semicolon delimiter
     output = io.StringIO()
