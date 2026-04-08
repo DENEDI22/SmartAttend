@@ -9,9 +9,9 @@ Requirements for QOL Improvements milestone. Each maps to roadmap phases.
 
 ### Cleanup
 
-- [ ] **CLN-01**: Lux reading feature removed (MQTT handler, subscription, model references)
-- [ ] **CLN-02**: Check-in token rotation interval extended from 60s to 90s
-- [ ] **CLN-03**: Student JWT session extended to 30 days (stay logged in until logout)
+- [x] **CLN-01**: Lux reading feature removed (MQTT handler, subscription, model references)
+- [x] **CLN-02**: Check-in token rotation interval extended from 60s to 90s
+- [x] **CLN-03**: Student JWT session extended to 30 days (stay logged in until logout)
 
 ### Password Management
 
@@ -74,9 +74,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CLN-01 | Phase 10 | Pending |
-| CLN-02 | Phase 10 | Pending |
-| CLN-03 | Phase 10 | Pending |
+| CLN-01 | Phase 10 | Complete |
+| CLN-02 | Phase 10 | Complete |
+| CLN-03 | Phase 10 | Complete |
 | PWD-01 | Phase 11 | Pending |
 | PWD-02 | Phase 11 | Pending |
 | LATE-01 | Phase 12 | Pending |

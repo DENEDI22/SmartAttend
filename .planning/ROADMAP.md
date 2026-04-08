@@ -37,7 +37,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 
 **Milestone Goal:** Quality-of-life improvements -- student visibility, late tracking, auth polish, and bulk data import.
 
-- [ ] **Phase 10: Cleanup** - Remove dead code and adjust token/session config for better UX
+- [x] **Phase 10: Cleanup** - Remove dead code and adjust token/session config for better UX (completed 2026-04-08)
 - [ ] **Phase 11: Password Management** - Self-service password change and admin password reset
 - [ ] **Phase 12: Late Threshold** - Three-state attendance model with configurable late detection
 - [ ] **Phase 13: Student Dashboard** - Attendance summary and detailed lesson history for students
@@ -128,7 +128,7 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 7. Dummy Clients | v1.0 | 2/2 | Complete | 2026-03-31 |
 | 8. Network & Public Access | v1.1 | 2/2 | Complete | 2026-04-02 |
 | 9. ESP32 Firmware | v1.1 | 1/1 | Complete | 2026-04-02 |
-| 10. Cleanup | v1.2 | 0/? | Not started | - |
+| 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
 | 11. Password Management | v1.2 | 0/? | Not started | - |
 | 12. Late Threshold | v1.2 | 0/? | Not started | - |
 | 13. Student Dashboard | v1.2 | 0/? | Not started | - |
