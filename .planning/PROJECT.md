@@ -39,7 +39,7 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 ### Active
 
 - [ ] Student dashboard with attendance summary and detailed lesson list
-- [ ] Password change (self-service for all users + admin reset for any user)
+- ✓ Password change (self-service for all users + admin reset) — v1.2 Phase 11
 - [ ] "Verspätet" late threshold — global default with per-schedule-entry override
 - ✓ Lux reading feature removed — v1.2 Phase 10
 - ✓ Check-in token rotation extended to 90s — v1.2 Phase 10
@@ -118,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-08 after Phase 10 Cleanup complete*
+*Last updated: 2026-04-08 after Phase 11 Password Management complete*
