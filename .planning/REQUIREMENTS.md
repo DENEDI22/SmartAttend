@@ -27,8 +27,8 @@ Requirements for QOL Improvements milestone. Each maps to roadmap phases.
 
 ### Student Dashboard
 
-- [ ] **STUD-01**: Student can view attendance summary (total lessons, attended, missed, late, percentage)
-- [ ] **STUD-02**: Student can view detailed lesson list with date, class, time, room, and status (Anwesend/Verspaetet/Abwesend)
+- [x] **STUD-01**: Student can view attendance summary (total lessons, attended, missed, late, percentage)
+- [x] **STUD-02**: Student can view detailed lesson list with date, class, time, room, and status (Anwesend/Verspaetet/Abwesend)
 
 ### CSV Import
 
@@ -83,8 +83,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LATE-02 | Phase 12 | Complete |
 | LATE-03 | Phase 12 | Complete |
 | LATE-04 | Phase 12 | Complete |
-| STUD-01 | Phase 13 | Pending |
-| STUD-02 | Phase 13 | Pending |
+| STUD-01 | Phase 13 | Complete |
+| STUD-02 | Phase 13 | Complete |
 | CSV-01 | Phase 14 | Pending |
 | CSV-02 | Phase 14 | Pending |
 | CSV-03 | Phase 14 | Pending |

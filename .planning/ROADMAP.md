@@ -40,7 +40,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 - [x] **Phase 10: Cleanup** - Remove dead code and adjust token/session config for better UX (completed 2026-04-08)
 - [x] **Phase 11: Password Management** - Self-service password change and admin password reset (completed 2026-04-08)
 - [x] **Phase 12: Late Threshold** - Three-state attendance model with configurable late detection (completed 2026-04-08)
-- [ ] **Phase 13: Student Dashboard** - Attendance summary and detailed lesson history for students
+- [x] **Phase 13: Student Dashboard** - Attendance summary and detailed lesson history for students (completed 2026-04-08)
 - [ ] **Phase 14: CSV Import** - Bulk user and schedule creation via template-based CSV upload
 
 ## Phase Details
@@ -96,7 +96,7 @@ Plans:
   3. Late status on the student dashboard matches the teacher's view for the same lesson
 **Plans**: 1 plan
 Plans:
-- [ ] 13-01-PLAN.md — Student dashboard with attendance summary stats and grouped lesson history
+- [x] 13-01-PLAN.md — Student dashboard with attendance summary stats and grouped lesson history
 **UI hint**: yes
 
 ### Phase 14: CSV Import
@@ -133,5 +133,5 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
 | 11. Password Management | v1.2 | 2/2 | Complete    | 2026-04-08 |
 | 12. Late Threshold | v1.2 | 1/2 | Complete    | 2026-04-08 |
-| 13. Student Dashboard | v1.2 | 0/1 | Not started | - |
+| 13. Student Dashboard | v1.2 | 1/1 | Complete   | 2026-04-08 |
 | 14. CSV Import | v1.2 | 0/? | Not started | - |
