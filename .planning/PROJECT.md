@@ -10,12 +10,12 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 ## Current State
 
-**v1.2 QOL Improvements in progress.** Phase 10 (Cleanup) complete — lux dead code removed, token rotation 90s, student session 30 days.
+**v1.2 QOL Improvements in progress.** Phase 12 (Late Threshold) complete — three-state attendance classification (Anwesend/Verspaetet/Abwesend) with configurable thresholds.
 
 - Tech stack: FastAPI + Jinja2 + SQLAlchemy + SQLite + Mosquitto + paho-mqtt + APScheduler
 - Docker Compose stack with 3 containers (server, mqtt, ngrok)
 - ESP32 firmware at `ESP32THINGS/SmartAttend/SmartAttend.ino` (269 lines)
-- 10 phases shipped across 2 milestones + v1.2 cleanup
+- 12 phases shipped across 2 milestones + v1.2 QOL
 - Timeline: 2026-03-27 → present
 
 ## Requirements
@@ -40,7 +40,7 @@ Students can check in to a lesson by tapping their phone on the classroom NFC de
 
 - [ ] Student dashboard with attendance summary and detailed lesson list
 - ✓ Password change (self-service for all users + admin reset) — v1.2 Phase 11
-- [ ] "Verspätet" late threshold — global default with per-schedule-entry override
+- ✓ "Verspätet" late threshold — global default with per-schedule-entry override — v1.2 Phase 12
 - ✓ Lux reading feature removed — v1.2 Phase 10
 - ✓ Check-in token rotation extended to 90s — v1.2 Phase 10
 - ✓ Student JWT session extended to 30 days — v1.2 Phase 10
