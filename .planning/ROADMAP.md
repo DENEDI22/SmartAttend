@@ -130,7 +130,7 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 8. Network & Public Access | v1.1 | 2/2 | Complete | 2026-04-02 |
 | 9. ESP32 Firmware | v1.1 | 1/1 | Complete | 2026-04-02 |
 | 10. Cleanup | v1.2 | 0/1 | Complete    | 2026-04-08 |
-| 11. Password Management | v1.2 | 2/2 | Complete   | 2026-04-08 |
+| 11. Password Management | v1.2 | 2/2 | Complete    | 2026-04-08 |
 | 12. Late Threshold | v1.2 | 0/? | Not started | - |
 | 13. Student Dashboard | v1.2 | 0/? | Not started | - |
 | 14. CSV Import | v1.2 | 0/? | Not started | - |
