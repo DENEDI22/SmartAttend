@@ -35,9 +35,9 @@ Requirements for QOL Improvements milestone. Each maps to roadmap phases.
 - [x] **CSV-01**: Admin can download a template CSV for user import
 - [x] **CSV-02**: Admin can upload a user CSV and see a validation preview with per-row error highlighting
 - [x] **CSV-03**: Admin can confirm user CSV import (only valid rows committed)
-- [ ] **CSV-04**: Admin can download a template CSV for schedule import
-- [ ] **CSV-05**: Admin can upload a schedule CSV and see a validation preview with overlap/FK errors
-- [ ] **CSV-06**: Admin can confirm schedule CSV import (only valid rows committed)
+- [x] **CSV-04**: Admin can download a template CSV for schedule import
+- [x] **CSV-05**: Admin can upload a schedule CSV and see a validation preview with overlap/FK errors
+- [x] **CSV-06**: Admin can confirm schedule CSV import (only valid rows committed)
 
 ## Future Requirements
 
@@ -88,9 +88,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CSV-01 | Phase 14 | Complete |
 | CSV-02 | Phase 14 | Complete |
 | CSV-03 | Phase 14 | Complete |
-| CSV-04 | Phase 14 | Pending |
-| CSV-05 | Phase 14 | Pending |
-| CSV-06 | Phase 14 | Pending |
+| CSV-04 | Phase 14 | Complete |
+| CSV-05 | Phase 14 | Complete |
+| CSV-06 | Phase 14 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 17 total
